@@ -21,6 +21,8 @@ import enchant  #why not working??
 from nltk.stem.snowball import SnowballStemmer
 from collections import defaultdict
 import pickle
+import pymongo
+
 
 #from nltk.corpus import wordnet as wn
 #from nltk.stem.wordnet import WordNetLemmatizer
@@ -467,21 +469,77 @@ clore_and_storm_Mar19_dict = create_dict_of_word_variations(clore_and_storm)
 #to create pickle
 with open('clore_and_storm_words_Mar19_dict.pkl', 'w') as picklefile:
     pickle.dump(clore_and_storm_Mar19_dict, picklefile)
-    
+
+
+######################################################################
+#Use this dict for now as the emotion dictionary. tweak later.
+#add words from list to add below. and take out lots of words
+#whose primary meaning is non-emo.
 #to retrieve pickle:
 with open('clore_and_storm_words_Mar19_dict.pkl', 'r') as picklefile:
     clore_and_storm_Mar19_dict = pickle.load(picklefile)
+######################################################################
 
 
 #now that have dict of emo words...
 
+#get dream and waking corpuses ready to work with:
+
+#connect to database:
+client = pymongo.MongoClient()  #create a MongoClient to the running mongod instance:
+db = client.dreams  
+dream_wake_collection = db.dream_wake 
+
+#get and clean waking reports
+cursor_wake = dream_wake_collection.find( {'dream_wake': 'Waking'}, {'text':1, '_id':0})
+waking_corpus = [report['text'] for report in cursor_wake]
+waking_corpus_clean = [report for report in waking_corpus if len(report) > 150]  
+
+#get rid of duplicate waking reports:
+waking_corpus_clean = [report for report in waking_corpus_clean if report != waking_corpus_clean[0] 
+                           and report != waking_corpus_clean[1] and report != waking_corpus_clean[2] 
+                           and report != waking_corpus_clean[10] and report != waking_corpus_clean[12]
+                           and report != waking_corpus_clean[17] and report != waking_corpus_clean[19]
+                           and report != waking_corpus_clean[69] and report != waking_corpus_clean[70]]
+
+len(waking_corpus_clean)
+
+with open('waking_corpus_clean.pkl', 'w') as picklefile:
+    pickle.dump(waking_corpus_clean, picklefile)
+
+################################################################
+#to get waking reports corpus:
+with open('waking_corpus_clean.pkl', 'r') as picklefile:
+    waking_corpus_clean_2 = pickle.load(picklefile)
+################################################################
 
 
+#get and clean dream reports
+cursor_dreams = dream_wake_collection.find( {'dream_wake': 'Dream'}, {'text':1, '_id':0})
+dream_corpus = [dream['text'] for dream in cursor_dreams]
+dream_corpus_clean = [dream for dream in dream_corpus if len(dream) > 150]  
 
-#turn these into functions:
+#get rid of duplicate dreams:
+dream_corpus_clean = [dream for dream in dream_corpus_clean if dream != dream_corpus_clean[0] 
+                           and dream != dream_corpus_clean[1] and dream != dream_corpus_clean[9] 
+                           and dream != dream_corpus_clean[14] and dream != dream_corpus_clean[15]
+                           and dream != dream_corpus_clean[16] and dream != dream_corpus_clean[17]
+                           and dream != dream_corpus_clean[68] and dream != dream_corpus_clean[69]
+                           and dream != dream_corpus_clean[183]]
+
+with open('dream_corpus_clean.pkl', 'w') as picklefile:
+    pickle.dump(dream_corpus_clean, picklefile)
+
+################################################################
+#to get dream reports corpus:
+with open('dream_corpus_clean.pkl', 'r') as picklefile:
+    dream_corpus_clean_2 = pickle.load(picklefile)
+################################################################
+
+
 
 #in each set of text docs
-#change all words in waking reports to lowercase
+#change all words in reports to lowercase
 def corpus_lowercase(corpus):
     corpus_lower =[]
     for report in corpus:
@@ -491,7 +549,7 @@ def corpus_lowercase(corpus):
     return corpus_lower
 
 
-#corret spelling in waking reports
+#corret spelling in reports
 def corpus_spelling_correct(corpus):
     corpus_spell_correct =[]
     for report in corpus_spell_correct:
@@ -501,7 +559,7 @@ def corpus_spelling_correct(corpus):
     return corpus_spell_correct
     
     
-#replace all emotion words in waking report corpus with the root word. 
+#replace all emotion words in report corpus with the root word. 
 #i.e, replace scare and scary with scared. 
 def replace_emo_words_w_root(corpus, emotion_to_root_dict):
     corpus_replaced_emotions = []
@@ -513,7 +571,7 @@ def replace_emo_words_w_root(corpus, emotion_to_root_dict):
     return corpus_replaced_emotions
 
 
-#create dict where emotion_complete category is the key and the values are whether absent or present in each report (waking)
+#create dict where emotion_complete category is the key and the values are whether absent or present in each report
 def count_docs_w_ea_emotion(corpus, emotion_to_root_dict):
     count_of_ea_emotion_dict = defaultdict(list)
     for report in corpus:   
@@ -539,7 +597,7 @@ def sort_emotion_counts_alphabetically(emotion_to_count_dict):
 
 
 #compute ratio of emotions in dream reports over waking reports
-def get_emotion_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2):
+def get_emotion_corpus1_to_corpus2_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2):
     """Takes list of emotions and their counts sorted alphabetically and computes emotion ratios.
     Then sorts these emotion ratios from highest to lowest"""
     emotions_ratio_list = [] 
@@ -547,29 +605,79 @@ def get_emotion_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion
         emotion = alphabetical_emotion_counts_corpus1[i][0]
         ratio = float((alphabetical_emotion_counts_corpus1[i][1] + 10)) / float((alphabetical_emotion_counts_corpus2[i][1] + 10))
         emotions_ratio_list.append([emotion, ratio])
-    sorted_emotion_ratios = sorted(emotions_ratio_list, key=get_key, reverse=True)
-    return sorted_emotion_ratios
+    sorted_emotion_corpus1_to_corpus2_ratios = sorted(emotions_ratio_list, key=get_key, reverse=True)
+    return sorted_emotion_corpus1_to_corpus2_ratios
 
 
-#compute ratio of emotions in dream reports over dream reports
-waking_emotion_complete_counts_sorted_alphabetically = sort_emotion_counts_alphabetically(waking_emotions_complete_dictionary)
-dream_emotion_complete_counts_sorted_alphabetically = sort_emotion_counts_alphabetically(dream_emotions_complete_dictionary)
+#compute ratio of emotions in waking reports over dream reports
+def get_emotion_corpus1_to_corpus2_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2):
+    """Takes list of emotions and their counts sorted alphabetically and computes emotion ratios.
+    Then sorts these emotion ratios from highest to lowest"""
+    emotions_ratio_list = [] 
+    for i in range(len(alphabetical_emotion_counts_corpus1)):
+        emotion = alphabetical_emotion_counts_corpus1[i][0]
+        ratio = float((alphabetical_emotion_counts_corpus2[i][1] + 10)) / float((alphabetical_emotion_counts_corpus1[i][1] + 10))
+        emotions_ratio_list.append([emotion, ratio])
+    sorted_emotion_corpus2_to_corpus1_ratios = sorted(emotions_ratio_list, key=get_key, reverse=True)
+    return sorted_emotion_corpus2_to_corpus1_ratios
 
-#compute dream words to real-life words ratio
-dream_to_wake_emotion_complete_ratios = get_emotion_ratios(dream_emotion_complete_counts_sorted_alphabetically, waking_emotion_complete_counts_sorted_alphabetically)
 
-#plot
-X = [word[0] for word in dream_to_wake_emotion_complete_ratios[:25]]
-Y = [freq[1] for freq in dream_to_wake_emotion_complete_ratios[:25]]
+#plot  -  TURN INTO FUNCTION:
+def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
+    X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
+    Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
+    fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
+    sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
+    sns.despine(left=True)
+    plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
+    plt.xticks(rotation=75)
+    plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
+    plt.ylim(1, 3.05)
+    plt.ylabel('Frequency in {} relative to {}'.format(corpus1_name, corpus2_name), fontsize=15)
 
-fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
-sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
-sns.despine(left=True)
-plt.title('Emotion-words Most Representative of Dreams', fontsize=17)
-plt.xticks(rotation=75)
-plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
-plt.ylim(1, 3.05)
-plt.ylabel("Frequency in dreams relative to real events", fontsize=15)
+
+#plot  -  TURN INTO FUNCTION:
+def plot_ratios_corpus2_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
+    X = [word[0] for word in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
+    Y = [freq[1] for freq in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
+    fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
+    sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
+    sns.despine(left=True)
+    plt.title('Emotion-words Most Representative of ' + corpus2_name, fontsize=17)
+    plt.xticks(rotation=75)
+    plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
+    plt.ylim(1, 3.05)
+    plt.ylabel('Frequency in {} relative to {}'.format(corpus2_name, corpus1_name), fontsize=15)
+
+
+#do for ea corpus:
+corpus_lowercase(corpus)
+corpus_spelling_correct(corpus)
+replace_emo_words_w_root(corpus, emotion_to_root_dict)
+count_docs_w_ea_emotion(corpus, emotion_to_root_dict)
+sort_emotion_counts_alphabetically(emotion_to_count_dict)
+
+
+#then get ratios and plot:
+get_emotion_corpus1_to_corpus2_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2)
+get_emotion_corpus2_to_corpus1_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2)
+plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios)
+plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios)
+
+
+
+#NEXT - FOR THUR:
+
+# 1. make sure this works to plot the two graphs.
+
+# 2. tweak so can just enter two corpuses and a name for each and 
+#    it'll then plot the two graphs.
+
+# 3. read over flask link and start to think about how to get into web-app
+
+
+
+
 
 
 
