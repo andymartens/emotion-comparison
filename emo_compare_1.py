@@ -446,114 +446,328 @@ clore_vs_storm = show_words_not_in_list2(clore_words, storm_words)
 len(clore_vs_storm)
 
 
-clore_and_storm = sorted(list(set(storm_words + clore_words)))
+emo_words_to_add = ['guilty', 'hate', 'hated', 'hates', 'hating', 'sad', 
+                    'sadden', 'saddened', 'saddening', 'saddens', 'sadly', 
+                    'scary', 'weep', 'weeping', 'weeps', 'weepy', 'wept',
+                    'ashamed' 'shameful', 'shyness'] 
+
+
+clore_and_storm = sorted(list(set(storm_words + clore_words + emo_words_to_add)))
 len(clore_and_storm)
 clore_and_storm[100:200]
 
 clore_storm_vs_fletcher = show_words_not_in_list2(fletcher_words, clore_and_storm)
 len(clore_storm_vs_fletcher)
-clore_storm_vs_fletcher[900:]
+clore_storm_vs_fletcher[:100]
 
+word_list_to_text_file(clore_and_storm, 'clore_and_storm_Mar19.txt')
 
-#need to add guilty and guiltily, hate, hated, hates, hating
-#'sad', sadden', 'saddened','saddening', 'saddens','sadistic', 'sadly', 'scary',
-# 'weep', 'weeping', 'weeps', 'weepy', 'wept',
- 
+clore_and_storm_Mar19_dict = create_dict_of_word_variations(clore_and_storm)
 
-
-
-
-
-
-
-
-
-
-
-
-
-##############################################################################
-
-# create variations on root words. lemmas are the variations.
-# and also get dictionary to put synonums in same category
-
-#if use this then i need to manually write all versions and then change back to root with this
-lmtzr = WordNetLemmatizer()
-lmtzr.lemmatize('worriedly', 'r')  #if do a verb, closer to what i want
-
-
-#this gives words that are related, but more loose than synonyms
-#e.g., worried will return fear. so SKIP this.
-j = wn.synsets('worriedly')[0]
-j.hyponyms()
-
-
-#this is much closer to synonyms. might work for me???
-for i in wn.synsets('worriedly'):
-    if i.pos() in ['a', 's', 'v', 'n', 'r']: # If synset is adj or satelite-adj.
-        for j in i.lemmas(): # Iterating through lemmas for each synset.
-           print j
-            
-
-#not bad: takes the longer term and finds the root. e.g., worry. and synon. hmmm.
-for word in wn.synsets('worriedly'):
-    print word.lemma_names()
-#anger = wn.lemmas('anger')
-
-
-def get_synonyms(word, pos):
-        synonyms = []
-        for s in wn.synsets(word, pos):
-                synonyms += s.lemma_names()
-        return list(set(synonyms))
-
-#this does work ok? though giving words that aren't really synonyms?
-#I think i just want the lemmas. i.e., just group words from the same root.
-#but would need to manually put all variations
-get_synonyms('worriedly', 'n')  #kind of sucks. e.g, with adored it returns
-#alls sorts of synonyms. but with adore it doestn't give any.
-
-
-#synsets = wn.synsets('worried', pos='n')[0]
-#l = synsets.lemmas()[0]
-#x = l.derivationally_related_forms()
-
-#SKIP
-acknowledgment_synset = wn.synset('worried.a.01')
-acknowledgment_lemma = acknowledgment_synset.lemmas()
-for a in acknowledgment_lemma:
-    print a.derivationally_related_forms()
+#to create pickle
+with open('clore_and_storm_words_Mar19_dict.pkl', 'w') as picklefile:
+    pickle.dump(clore_and_storm_Mar19_dict, picklefile)
     
+#to retrieve pickle:
+with open('clore_and_storm_words_Mar19_dict.pkl', 'r') as picklefile:
+    clore_and_storm_Mar19_dict = pickle.load(picklefile)
 
-WN_NOUN = 'n'
-WN_VERB = 'v'
-WN_ADJECTIVE = 'a'
-WN_ADJECTIVE_SATELLITE = 's'
-WN_ADVERB = 'r'
- 
- 
- #think the synonym thing might not work that well for me
-#better to just stick to grouping words with the same lemma/root
-#might have to do that manually? though may be able to use:
-lmtzr = WordNetLemmatizer()
-lmtzr.lemmatize('worried', 'v')  #if do a verb, closer to what i want
-#i.e., make list w all variations. and then use this above to create
-#dictionaries to lumping together words from same lexeme?
-#this this is only one that makes sense for now. create all the variations 
-#i can and then plug the into this for all parts of speech to get lemma?
-#and choose the shortest option? e.g., might get a few lemmas for diff parts
-#of speech. just systematically choose the shortest.
-#BUT THIS ISN'T WORKING THAT WELL EITHER! E.G., WON'T TAKE WORRIEDLY AND 
-#MAKE IS LESS. SO MAYBE USE THIS TO SIMPLITFY A BIT??? OR JUST DO THE WHOLE
-#THING BY HAND.
+
+#now that have dict of emo words...
 
 
 
-#more from the pattern module:
-conjugate('irritated') # he / she / it. does this give me the root i want?!
-f1 = wordnet.synsets('nervousness')[0]
-f2 = wordnet.synsets('anxiety')[0]
-f.synonyms
-a.synonyms
-wordnet.similarity(f1, f2) 
+
+#turn these into functions:
+
+#in each set of text docs
+#change all words in waking reports to lowercase
+def corpus_lowercase(corpus):
+    corpus_lower =[]
+    for report in corpus:
+        textblob_report = TextBlob(report)
+        new_report = ' '.join([word.lower() for word in textblob_report.words]) 
+        corpus_lower.append(new_report) 
+    return corpus_lower
+
+
+#corret spelling in waking reports
+def corpus_spelling_correct(corpus):
+    corpus_spell_correct =[]
+    for report in corpus_spell_correct:
+        textblob_report = TextBlob(report)
+        report_spelled = textblob_report.correct()
+        corpus_spell_correct.append(report_spelled)
+    return corpus_spell_correct
+    
+    
+#replace all emotion words in waking report corpus with the root word. 
+#i.e, replace scare and scary with scared. 
+def replace_emo_words_w_root(corpus, emotion_to_root_dict):
+    corpus_replaced_emotions = []
+    for report in corpus:   
+        for key in emotion_to_root_dict.keys():
+            for word in emotion_to_root_dict[key]:
+                report = report.replace(word, key)
+        corpus_replaced_emotions.append(report)
+    return corpus_replaced_emotions
+
+
+#create dict where emotion_complete category is the key and the values are whether absent or present in each report (waking)
+def count_docs_w_ea_emotion(corpus, emotion_to_root_dict):
+    count_of_ea_emotion_dict = defaultdict(list)
+    for report in corpus:   
+        for emotion in emotion_to_root_dict.keys():
+            if emotion in report:
+                count_of_ea_emotion_dict[emotion].append(1)
+            else:
+                count_of_ea_emotion_dict[emotion].append(0)
+    return count_of_ea_emotion_dict
+
+
+#sort emotions words alphabetically 
+def sort_emotion_counts_alphabetically(emotion_to_count_dict):
+    """Takes dictionary with each emotion and how many docs it appears in (from a corpus) and sorts the emotions
+    (and corresponding counts) from a to z"""
+    words_to_counts_list = []
+    for key, value in emotion_to_count_dict.iteritems():
+        words_to_counts_list.append([key, sum(value)])
+    def get_key(item):
+        return item[0]
+    sorted_emotions_words_to_counts = sorted(words_to_counts_list, key=get_key)
+    return sorted_emotions_words_to_counts
+
+
+#compute ratio of emotions in dream reports over waking reports
+def get_emotion_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2):
+    """Takes list of emotions and their counts sorted alphabetically and computes emotion ratios.
+    Then sorts these emotion ratios from highest to lowest"""
+    emotions_ratio_list = [] 
+    for i in range(len(alphabetical_emotion_counts_corpus1)):
+        emotion = alphabetical_emotion_counts_corpus1[i][0]
+        ratio = float((alphabetical_emotion_counts_corpus1[i][1] + 10)) / float((alphabetical_emotion_counts_corpus2[i][1] + 10))
+        emotions_ratio_list.append([emotion, ratio])
+    sorted_emotion_ratios = sorted(emotions_ratio_list, key=get_key, reverse=True)
+    return sorted_emotion_ratios
+
+
+#compute ratio of emotions in dream reports over dream reports
+waking_emotion_complete_counts_sorted_alphabetically = sort_emotion_counts_alphabetically(waking_emotions_complete_dictionary)
+dream_emotion_complete_counts_sorted_alphabetically = sort_emotion_counts_alphabetically(dream_emotions_complete_dictionary)
+
+#compute dream words to real-life words ratio
+dream_to_wake_emotion_complete_ratios = get_emotion_ratios(dream_emotion_complete_counts_sorted_alphabetically, waking_emotion_complete_counts_sorted_alphabetically)
+
+#plot
+X = [word[0] for word in dream_to_wake_emotion_complete_ratios[:25]]
+Y = [freq[1] for freq in dream_to_wake_emotion_complete_ratios[:25]]
+
+fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
+sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
+sns.despine(left=True)
+plt.title('Emotion-words Most Representative of Dreams', fontsize=17)
+plt.xticks(rotation=75)
+plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
+plt.ylim(1, 3.05)
+plt.ylabel("Frequency in dreams relative to real events", fontsize=15)
+
+
+
+
+#maybe to add? 
+'unworthy', 
+'worthy', 
+ u'unsettle',
+ u'unsettled',
+ u'unsettles',
+ u'unsettling',
+ u'stress',
+ u'stressed',
+ u'stresses',
+ u'stressing',
+ u'sulk',
+ u'sulked',
+ u'sulking',
+ u'sulks',
+ 'sullen',
+ 'sullenly',
+ 'tearful',
+ 'tearfully',
+ u'tense',
+ u'tensely',
+ u'threat',
+ u'threats',
+ u'repulse',
+ u'repulsed',
+ u'repulses',
+ u'repulsing',
+ u'resent',
+ u'resented',
+ 'resentful',
+ 'resentfully',
+ u'resenting',
+ u'resents',
+ u'seethed',
+ u'seethes',
+ u'seething',
+ 'somber',
+ 'somberly',
+ 'sorrowful',
+ 'sorrowfully',
+ u'obsess',
+ u'obsessed',
+ u'obsesses',
+ u'obsessing',
+ 'obsessive',
+ 'obsessively',
+ 'obsessives',
+ u'overwhelm',
+ u'overwhelmed',
+ u'overwhelming',
+ u'overwhelms',
+ 'panicky',
+ 'paranoia',
+ 'paranoid',
+ 'paranoids',
+ 'powerless',
+ 'powerlessly',
+ 'regretful',
+ 'regretfully',
+ 'remorseful',
+ 'remorsefully']
+ 'miserable',
+ 'happiness',
+ 'helplessness',
+ 'hothead',
+ 'hotheaded',
+ 'hotheadedly',
+ 'hotheads',
+ 'humility',
+ 'hurtful',
+ 'hurtfully',
+ u'idolize',
+ u'idolized',
+ u'idolizes',
+ u'idolizing',
+  u'infuriate',
+ u'infuriated',
+ u'infuriates',
+ u'infuriating',
+ u'infuriatingly',
+ 'jealous',
+ 'jealously',
+ 'judgmental',
+ 'judgmentally']
+ u'enrage',
+ u'enraged',
+ u'enrages',
+ u'enraging',
+ u'exhilarate',
+ u'exhilarated',
+ u'exhilarates',
+ u'exhilarating',
+ 'exhilaration',
+ u'fluster',
+ u'flustered',
+ u'flustering',
+ u'flusters',
+ u'fret',
+ 'fretful',
+ 'fretfully',
+ u'frets',
+ u'fretted',
+ u'fretting',
+u'fume',
+ u'fumed',
+ u'fuming',
+ 'genial',
+ 'genially',
+ u'grieve',
+ u'grieved',
+ u'grieves',
+ u'grieving',
+ 'grim',
+ 'grimly',
+u'grouch',
+ 'dismal',
+ 'dismally',
+ u'disorientate',
+ u'disoriented',
+ u'disorienting',
+ u'disorients',
+ u'disquiet',
+ u'disquieted',
+ u'disquieting',
+ u'disquiets',
+ 'disrespectful',
+ 'disrespectfully',
+ 'dopey',
+ 'downcast',
+ 'ebullient',
+ 'ebulliently',
+ u'bummed',
+ 'bummer',
+ 'bummers',
+ u'chagrin',
+ u'chagrins',
+ u'cherish',
+ u'cherished',
+ u'cherishes',
+ u'cherishing',
+ 'compulsive',
+ 'compulsively',
+ 'aggravation',
+ 'aggravations',
+ u'agonize',
+ u'agonized',
+ u'agonizes',
+ u'agonizing',
+ u'agonizingly',
+ 'ambivalent',
+ 'ambivalently',
+ u'antagonize',
+ u'antagonized',
+ u'antagonizes',
+ u'antagonizing',
+ u'appall',
+ u'appalled',
+ u'appalling',
+ u'appallingly',
+ 'appreciative',
+ 'appreciatively',
+ 'attentive',
+ 'attentively',
+ 'awkward',
+ 'awkwardly',
+ 'awkwardness',
+ u'befuddle',
+ u'befuddled',
+ u'befuddles',
+ u'befuddling',
+ u'belittle',
+ u'belittled',
+ u'belittles',
+ u'belittling',
+ 'belligerent',
+ 'belligerently',
+ 'belligerents',
+ 'bleak',
+ 'bleakly',
+ 'bleakness',
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
