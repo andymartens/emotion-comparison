@@ -684,7 +684,7 @@ def corpus_to_alphabetical_emotion_counts(corpus, emotion_to_root_dict):
 #len(emotion_to_count_dict)
 #alphabetical_emotions_w_counts_list = sort_emotion_counts_alphabetically(emotion_to_count_dict)
 #len(alphabetical_emotions_w_counts_list)
-alphabetical_emotions_w_counts_list[:15]
+#alphabetical_emotions_w_counts_list[:15]
 
 
 #then get ratios and plot:
