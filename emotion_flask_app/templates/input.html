@@ -4,24 +4,65 @@
     Enter two corpora to compare emotions in them
     <meta charset="utf-8" />
     <title>Emotionizer</title>
+    <style>
+
+    .box_for_text_input {
+        display: inline-block;
+        text-align: center;
+        width: 400px;
+        height: 20em;
+        margin: 2em;
+        color: white;
+    }
+
+    .text_input {
+        display: inline-block;
+        text-align: center;
+        width: 400px;
+        height: 20em;
+        margin: 2em;
+        color: black;
+    }
+
+    #opening_instructions {
+        text-align: justify;
+        color: white;
+        margin: 3em;
+    }
+
+    body {
+        background-color: black;
+}
+
+    #button {
+        font-size: x-large;
+        position: relative;
+        top: -7em;
+        left: 7em;
+}
+
+    </style>
 
   </head>
+
+  <!-- When press submit button, i think this first line changes the url to end with /analyze
+  and sends a POST request to the app.py file on server. i assume the app.py file is listening
+  for a POST request and sees that it's now coming from /analyze url. so it runs the function
+  associated with /analyze. Check to see if this is correct. -->
   <body>
-    <!-- When press submit button, i think this first line changes the url to end with /analyze
-    and sends a POST request to the app.py file on server. i assume the app.py file is listening
-    for a POST request and sees that it's now coming from /analyze url. so it runs the function
-    associated with /analyze. Check to see if this is correct. -->
-        <form action="/analyze" method="POST">
-          <p> Corpus 1
-          <textarea rows="20" cols="100" name="corpus1">
-          </textarea>
-          </p>
-          <p> Corpus 2
-            <textarea rows="20" cols="100" name="corpus2">
-            </textarea>
-          </p>
-          <p>
-          <input type="submit" value="Analyze">
-          </p>
-	</form>
-</body>
+      <h2 id="opening_instructions">Paste the text from each corpus into its respective
+        text box.  Each corpus should consist of a group of text items.  Each text item
+        should be enclosed in quotes and separated from the next text item by a comma.</h2>
+      <form action="/analyze" method="POST">
+          <h2 class="box_for_text_input">Corpus 1
+              <textarea name="corpus1" class="text_input"></textarea>
+          </h2>
+          <h2 class="box_for_text_input">Corpus 2
+              <textarea name="corpus2" class="text_input"></textarea>
+          </h2>
+          <div>
+              <input type="submit" value="Analyze" id="button">
+          </div>
+      </form>
+  </body>
+</html>
