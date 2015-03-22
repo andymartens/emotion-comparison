@@ -3,20 +3,22 @@
   <head>
     Enter two corpora to compare emotions in them
     <meta charset="utf-8" />
-    <title>Emotionizer</title>>
+    <title>Emotionizer</title>
 
   </head>
   <body>
-    <!-- no pressing submit button, i think this first line changes the url to end with /analyze
+    <!-- When press submit button, i think this first line changes the url to end with /analyze
     and sends a POST request to the app.py file on server. i assume the app.py file is listening
     for a POST request and sees that it's now coming from /analyze url. so it runs the function
-    associated with /analyze. -->
+    associated with /analyze. Check to see if this is correct. -->
         <form action="/analyze" method="POST">
           <p> Corpus 1
-          <input type="text" name="corpus1" size="100" value="Yo yo, YOLO.">
+          <textarea rows="20" cols="100" name="corpus1">
+          </textarea>
           </p>
           <p> Corpus 2
-          <input type="text" name="corpus2" size="100" value="Hey now.">
+            <textarea rows="20" cols="100" name="corpus2">
+            </textarea>
           </p>
           <p>
           <input type="submit" value="Analyze">
