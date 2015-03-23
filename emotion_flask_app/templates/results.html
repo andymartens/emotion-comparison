@@ -1,13 +1,17 @@
 <html>
   <body>
 
-    <p> Your first corpus happens to be:</p>
+    <p>The graph below shows the 25 emotion words that appeared most frequently
+      in Corpus 1 as compared to Corpus 2. The higher the number, the more
+      represenetative of Corpus 1.</p>
+      <img src="/static/corpus1_to_corpus2.png" width=400  height=200>
     <p> {{ corpus_one }}  </p>
-    <p>And the second corpus is:</p>
-    <p> {{ corpus_two }}   </p>
 
-    <img src="/static/corpus1.png" width=200  height=200>
-    <img src="/static/corpus2.png" width=200 height=200>
+    <p>The graph below shows the 25 emotion words that appeared most frequently
+      in Corpus 2 as compared to Corpus 1. The higher the number, the more
+      represenetative of Corpus 2.</p>
+      <img src="/static/corpus2_to_corpus1.png" width=400 height=200>
+    <p> {{ corpus_two }}   </p>
 
   </body>
 </html>

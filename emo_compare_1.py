@@ -484,6 +484,10 @@ with open('clore_and_storm_words_Mar19_dict.pkl', 'r') as picklefile:
     clore_and_storm_Mar19_dict = pickle.load(picklefile)
 ######################################################################
 
+for values in clore_and_storm_Mar19_dict.values():
+    print values
+
+
 
 #now that have dict of emo words...
 
@@ -516,7 +520,10 @@ with open('waking_corpus_clean.pkl', 'w') as picklefile:
 with open('waking_corpus_clean.pkl', 'r') as picklefile:
     waking_corpus_clean_2 = pickle.load(picklefile)
 ################################################################
+len(waking_corpus_clean_2[:3])
 
+with open('corpus1_test.txt', 'w') as my_file:
+    my_file.write(waking_corpus_clean_2[0])
 
 #get and clean dream reports
 cursor_dreams = dream_wake_collection.find( {'dream_wake': 'Dream'}, {'text':1, '_id':0})
@@ -540,6 +547,14 @@ with open('dream_corpus_clean.pkl', 'r') as picklefile:
     dream_corpus_clean_2 = pickle.load(picklefile)
 ################################################################
 
+
+with open('corpus1_test.txt', 'w') as my_file:
+    for doc in dream_corpus_clean_2:        
+        my_file.write('"""' + doc + '"""' + ', ')
+
+with open('corpus2_test.txt', 'w') as my_file:
+    for doc in waking_corpus_clean_2:        
+        my_file.write('"""' + doc + '"""' + ', ')
 
 
 #in each set of text docs
