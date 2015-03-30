@@ -92,6 +92,7 @@ def replace_emo_words_w_root(corpus, emotion_to_root_dict):
     return corpus_replaced_emotions
 
 
+##
 #create dict where emotion_complete category is the key and the values are whether absent or present in each report
 def count_docs_w_ea_emotion(corpus, emotion_to_root_dict):
     count_of_ea_emotion_dict = defaultdict(list)
@@ -269,9 +270,294 @@ corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-li
 
 
 
+#####################################################################
+# testing out to look at bayes factors, p-vals, etc.
+
+corpus_wake_lower = corpus_lowercase(waking_corpus_clean_2)
+len(corpus_wake_lower)
+#corpus_lower_spelling = corpus_spelling_correct(corpus_lower)
+#len(corpus_lower_spelling)  #this took forever to compute!!! elim from function for now.
+corpus_wake_simplify_emo_words = replace_emo_words_w_root(corpus_wake_lower, clore_and_storm_Mar19_dict)
+len(corpus_wake_simplify_emo_words)  #this is each text descriptions 
+emotion_to_count_wake_dict = count_docs_w_ea_emotion(corpus_wake_simplify_emo_words, clore_and_storm_Mar19_dict)
+len(emotion_to_count_wake_dict)
+#alphabetical_emotions_w_counts_list = sort_emotion_counts_alphabetically(emotion_to_count_dict)
+#len(alphabetical_emotions_w_counts_list)
+#alphabetical_emotions_w_counts_list[:15]
+
+corpus_dream_lower = corpus_lowercase(dream_corpus_clean_2)
+len(corpus_dream_lower)
+corpus_dream_simplify_emo_words = replace_emo_words_w_root(corpus_dream_lower, clore_and_storm_Mar19_dict)
+len(corpus_dream_simplify_emo_words)  #this is each text descriptions 
+emotion_to_count_dream_dict = count_docs_w_ea_emotion(corpus_dream_simplify_emo_words, clore_and_storm_Mar19_dict)
+len(emotion_to_count_dream_dict)
+
+
+# ok, this is what i want: for each emotion word (key), the values are the list
+# of 0s and 1s representing whether each doc doesn't have or has the emo word
+keys_list = emotion_to_count_wake_dict.keys()
+truncated_keys_list = keys_list[:10]
+for key in truncated_keys_list:    
+    print len(emotion_to_count_wake_dict[key])
+    print
+
+
+# get the wake and dream dicts into df
+import pandas as pd
+waking_df = pd.DataFrame(emotion_to_count_wake_dict)
+waking_df.head()
+waking_df.describe()
+len(waking_df)
+waking_df['description_type'] = 'waking'
+
+dream_df = pd.DataFrame(emotion_to_count_dream_dict)
+dream_df.head()
+dream_df.describe()
+len(dream_df)
+dream_df['description_type'] = 'dream'
+
+# merge the two dfs
+df1 = pd.DataFrame({'a': [1, 3, 4], 'b': [4, 1, 0]})
+df2 = pd.DataFrame({'a': [11, 13, 14], 'b': [14, 11, 10]})
+df1_df2 = pd.concat([df1, df2], ignore_index=True)
+
+dream_and_waking_df = pd.concat([waking_df, dream_df], ignore_index=True)
+dream_and_waking_df.tail()
+emos = dream_and_waking_df.columns
+len(emos)
+emos = list(emos)
+emos.pop(-1)
+
+import thinkstats2
+import statsmodels.formula.api as sm #need this 'formula' api to use the R-style code. seems simpler.
+
+results1 = sm.ols(formula = 'scary ~ description_type', data=dream_and_waking_df).fit()
+print results1.summary()
+p_value = results1.pvalues[1]
+
+dir(results1)
+
+def bayesFact(resultsObj):
+    n = resultsObj.nobs
+    df_effect = resultsObj.df_model
+    df_error = resultsObj.df_resid
+    MSE_effect = resultsObj.mse_model
+    MSE_error = resultsObj.mse_resid
+    SS_effect = MSE_effect * df_effect
+    SS_error = MSE_error * df_error
+    SS_total = SS_effect + SS_error
+    deltaBIC = (n * np.log(SS_error / SS_total)) + (df_effect * np.log(n))
+    BF01 = np.exp(deltaBIC / 2)
+    pOfH0givenD = BF01 / (1 + BF01)
+    pOfH1givenD = 1 - pOfH0givenD
+    pTrue = pOfH1givenD / (pOfH1givenD + pOfH0givenD) 
+    return pOfH1givenD / pOfH0givenD 
+
+bayes_factor_excel = bayesFact(results1)
+dir(results1)
+
+# my bayes factor computation function
+
+dream_and_waking_df_vars = dream_and_waking_df[['description_type', 'scary']]
+waking_df_var = dream_and_waking_df_vars[dream_and_waking_df_vars['description_type'] == 'waking']
+dream_df_var = dream_and_waking_df_vars[dream_and_waking_df_vars['description_type'] == 'dream']
+waking_list = waking_df_var['scary'].values
+dream_list = dream_df_var['scary'].values
+
+np.mean(waking_list)
+np.mean(dream_list)
+
+
+#def bootstrap_diffs_list_H1(list1, list2):
+#    bootstrapped_differences_list_H1 = []
+#    for i in range(1000):
+#        sample1 = []
+#        for i in range(len(list1)):
+#            sample1.append(random.choice(list1))
+#        sample2 = []
+#        for i in range(len(list2)):  #148
+#            sample2.append(random.choice(list2))
+#        mean_difference = np.mean(sample2) - np.mean(sample1)
+#        bootstrapped_differences_list_H1.append(mean_difference)
+#    return bootstrapped_differences_list_H1
+#
+#def bootstrap_diffs_list_H0(list1, list2):
+#    list_pooled = list1 + list2
+#    bootstrapped_differences_list_H0 = []
+#    for i in range(1000):
+#        sample1 = []
+#        for i in range(len(list1)):
+#            sample1.append(random.choice(list_pooled))
+#        sample2 = []
+#        for i in range(len(list2)):  #148
+#            sample2.append(random.choice(list_pooled))
+#        mean_difference = np.mean(sample2) - np.mean(sample1)
+#        bootstrapped_differences_list_H0.append(mean_difference)
+#    return bootstrapped_differences_list_H0
+#
+#def prob_data_given_H(bootstrapped_differences_list):
+#    H_pdf = thinkstats2.EstimatedPdf(bootstrapped_differences_list)
+#    prob_of_observed_diff_given_H = H_pdf.Density(observed_diff)  
+#    return prob_of_observed_diff_given_H
+#
+#def compute_bayes_factor(prob_of_observed_diff_given_H1, prob_of_observed_diff_given_H0):
+#    bayes_factor = prob_of_observed_diff_given_H1 / prob_of_observed_diff_given_H0
+#    bayes_factor_pct = bayes_factor / (1 + bayes_factor)
+#    return (bayes_factor, bayes_factor_pct)
+#
+#def main_bayes(list1, list2):
+#    boot_diffs_list_H1 = bootstrap_diffs_list_H1(list1, list2)
+#    boot_diffs_list_H0 = bootstrap_diffs_list_H0(list1, list2)
+#    prob_data_given_H1 = prob_data_given_H(boot_diffs_list_H1)
+#    prob_data_given_H0 = prob_data_given_H(boot_diffs_list_H0)
+#    bayes_info = compute_bayes_factor(prob_data_given_H1, prob_data_given_H0)
+#    print 'bayes factor: {}, bayes factor pct: {}'.format(round(bayes_info[0][0], 2), round(bayes_info[1][0], 2))    
+#    return bayes_info
+#
+#bayes_info_test = main_bayes(list(waking_list), list(dream_list))
+##this doesn't work at all!!!
+
+# to bootstrap p-value:
+def get_bootstrapped_diffs_list(list_pooled):
+    bootstrapped_differences_list = []
+    for i in range(500):
+        sample1 = []
+        for i in range(122):
+            sample1.append(random.choice(list_pooled))
+        sample2 = []
+        for i in range(148):  #148
+            sample2.append(random.choice(list_pooled))
+        mean_difference = np.mean(sample2) - np.mean(sample1)
+        bootstrapped_differences_list.append(mean_difference)
+    return bootstrapped_differences_list
+
+def bootstrapped_diffs_to_pvalue(bootstrapped_differences_list, observed_diff):
+    observed_diff_bigger = 0
+    for diff in bootstrapped_differences_list:
+        if np.abs(diff) > np.abs(observed_diff):  #this abs val is key to getting the two-tailed, i think
+            observed_diff_bigger += 1
+    p_frequentist = observed_diff_bigger / 500
+    return p_frequentist
+
+# this produces the exact p-value as above. but it's diff than the p-val
+# produced by statsmodels. need to try this bootstrapping approach on a 
+# normal dataset w continuous dv that's normally distributed and see if 
+# it produces basically the same values there.
+def bootstrapped_diffs_to_pvalue_2(bootstrapped_differences_list, observed_diff):
+    observed_diff_bigger = 0
+    observed_diff_smaller = 0
+    for diff in bootstrapped_differences_list:
+        if diff > np.abs(observed_diff):  
+            observed_diff_bigger += 1
+        if diff < -1*(np.abs(observed_diff)):
+            observed_diff_smaller += 1
+    extreme_vals = observed_diff_bigger + observed_diff_smaller
+    p_frequentist = extreme_vals / 500
+    return p_frequentist
+# http://people.duke.edu/~ccc14/pcfb/analysis.html    
+
+# problem - this is returning something that corr with regular p-val
+# but it's a lot more conservative. so not the same thing.
+# wonder how it's diff. and wonder if this would be a better test for me to use
+# unless it's because these data are wacky. try on more normal data
+def get_pvalue_bootstrapped(list_pooled, observed_diff):
+    bootstrapped_diffs = get_bootstrapped_diffs_list(list_pooled)
+    p_value1 = bootstrapped_diffs_to_pvalue(bootstrapped_diffs, observed_diff)
+    p_value2 = bootstrapped_diffs_to_pvalue_2(bootstrapped_diffs, observed_diff)
+    return [p_value1, p_value2]
+
+
+# to do stats anys giving p-val and bayes factor
+
+waking_df = dream_and_waking_df[dream_and_waking_df['description_type'] == 'waking']
+dream_df = dream_and_waking_df[dream_and_waking_df['description_type'] == 'dream']
+
+
+dict_pval_bf = {'emotion': [], 'pvalue': [], 'bf': [], 'ratio5': [], 'ratio10': [], 'ratio15': [], 'difference': [], 'pvalue_boot1': [], 'pvalue_boot2':[]}
+
+for emo in emos:
+    # to get p-val:    
+    results1 = sm.ols(formula = '{} ~ description_type'.format(emo), data=dream_and_waking_df).fit()
+    p_value = results1.pvalues[1]
+    # to get bf:
+    bayes_factor_excel = bayesFact(results1)
+    # to get bootstrapped p-vals:
+    waking_list = list(waking_df[emo].values)
+    dream_list = list(dream_df[emo].values)
+    pooled_list = waking_list + dream_list
+    observed_diff = np.mean(dream_list) - np.mean(waking_list)
+    p_values_bootstrapped = get_pvalue_bootstrapped(pooled_list, observed_diff)
+    p_value_bootstrapped_1 = p_values_bootstrapped[0]
+    p_value_bootstrapped_2 = p_values_bootstrapped[1]
+    
+    # to get ratio:
+    ratio_dreams_to_waking5 = (np.mean(dream_list)*100 + 5) / (np.mean(waking_list)*100 + 5)
+    ratio_dreams_to_waking10 = (np.mean(dream_list)*100 + 10) / (np.mean(waking_list)*100 + 10)
+    ratio_dreams_to_waking15 = (np.mean(dream_list)*100 + 15) / (np.mean(waking_list)*100 + 15)
+    # get pct diff:        
+    difference_dream_waking = (np.mean(dream_list)*100) - (np.mean(waking_list)*100)
+    # put into dict:
+    dict_pval_bf['emotion'].append(emo)
+    dict_pval_bf['pvalue'].append(p_value)
+    dict_pval_bf['pvalue_boot1'].append(p_value_bootstrapped_1)
+    dict_pval_bf['pvalue_boot2'].append(p_value_bootstrapped_2)
+    dict_pval_bf['bf'].append(bayes_factor_excel)
+    dict_pval_bf['ratio5'].append(ratio_dreams_to_waking5)
+    dict_pval_bf['ratio10'].append(ratio_dreams_to_waking10)
+    dict_pval_bf['ratio15'].append(ratio_dreams_to_waking15)
+    dict_pval_bf['difference'].append(difference_dream_waking)
 
 
 
+len(dict_pval_bf['emotion'])
+len(emos)
+len(waking_list)
+len(waking_df.columns)
+len(pooled_list)
 
+dir(results1)
+help(results1)
+dir(sm)
+
+#SWEET WORKING. FOR FOR ALL EMOS. THEN TURN DICT INTO DF.
+#THEN LOOK AT SCATTERPLOT. MAY HAVE TO DO DROP NA?
+
+df_effects = pd.DataFrame(dict_pval_bf)    
+df_effects.head()
+
+df_effects.plot(kind='scatter', x='pvalue', y='pvalue_boot1')
+
+
+df_effects.plot(kind='scatter', x='pvalue', y='difference')
+plt.xlim(-.02, .8)
+plt.ylim(-.1, .8)
+
+
+plt.plot(df_effects['pvalue'], df_effects['bf'], 'ro')
+plt.ylim(0, 1)
+plt.xlim(0, .3)
+
+#plt.plot(df_effects['pvalue_boot'], df_effects['bf'], 'ro')
+#plt.ylim(0, 1)
+
+plt.plot(df_effects['pvalue'], df_effects['ratio'], 'ro')
+plt.xlim(-.01, .06)
+
+df_effects.plot(kind='scatter', x='pvalue', y='ratio')
+
+#df_effects.plot(kind='scatter', x='pvalue_boot', y='ratio')
+
+df_effects.plot(kind='scatter', x='bf', y='ratio')
+plt.xlim(0, .3)
+
+
+df_effects.plot(kind='scatter', x='difference', y='ratio5')
+plt.xlim(-10, 10)
+
+df_effects.plot(kind='scatter', x='difference', y='ratio10')
+df_effects.plot(kind='scatter', x='difference', y='ratio15')
+
+
+df_effects.plot(kind='scatter', x='pvalue', y='ratio15')
 
 
