@@ -561,3 +561,15 @@ df_effects.plot(kind='scatter', x='difference', y='ratio15')
 df_effects.plot(kind='scatter', x='pvalue', y='ratio15')
 
 
+
+#############################################################################
+# get good list/dictonary of emo words
+
+
+
+
+
+
+
+
+ 

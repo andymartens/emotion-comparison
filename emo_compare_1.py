@@ -132,6 +132,14 @@ for row in datafile:
 all_emo_words_2 = data
 
 
+test_list = ['fear', 'abandon', 'awe', 'shame', 'guilt', 'joy', 'happy', 'horrifying']
+variations = add_lexeme_variations(test_list)
+variations_real_words = eliminate_nonwords(variations)  #combine with above step/function
+variations_w_adverbs = add_adverb_variations(variations_real_words)
+
+
+
+
 #add variations on emo words to the list
 def add_lexeme_variations(word_list):
     lexemes_list = []
@@ -484,13 +492,20 @@ with open('clore_and_storm_words_Mar19_dict.pkl', 'r') as picklefile:
     clore_and_storm_Mar19_dict = pickle.load(picklefile)
 ######################################################################
 
-for values in clore_and_storm_Mar19_dict.values():
-    print values
+for key in clore_and_storm_Mar19_dict.keys():
+    print key
+
+clore_and_storm_Mar19_dict['ed']
+
+
+
+
+
+
 
 
 
 #now that have dict of emo words...
-
 #get dream and waking corpuses ready to work with:
 
 #connect to database:
@@ -744,10 +759,8 @@ corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-li
 
 
 #maybe to add? 
-'unworthy', 
-'worthy', 
- u'unsettle',
- u'unsettled',
+supplemental_list = ['unworthy', 
+'worthy', 'unsettle', 'unsettled',
  u'unsettles',
  u'unsettling',
  u'stress',
@@ -803,7 +816,7 @@ corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-li
  'regretful',
  'regretfully',
  'remorseful',
- 'remorsefully']
+ 'remorsefully'
  'miserable',
  'happiness',
  'helplessness',
@@ -818,7 +831,7 @@ corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-li
  u'idolized',
  u'idolizes',
  u'idolizing',
-  u'infuriate',
+ u'infuriate',
  u'infuriated',
  u'infuriates',
  u'infuriating',
@@ -826,7 +839,7 @@ corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-li
  'jealous',
  'jealously',
  'judgmental',
- 'judgmentally']
+ 'judgmentally'
  u'enrage',
  u'enraged',
  u'enrages',
@@ -846,7 +859,7 @@ corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-li
  u'frets',
  u'fretted',
  u'fretting',
-u'fume',
+ u'fume',
  u'fumed',
  u'fuming',
  'genial',
@@ -857,7 +870,7 @@ u'fume',
  u'grieving',
  'grim',
  'grimly',
-u'grouch',
+ u'grouch',
  'dismal',
  'dismally',
  u'disorientate',
@@ -922,21 +935,75 @@ u'grouch',
  'belligerents',
  'bleak',
  'bleakly',
- 'bleakness',
+ 'bleakness']
+
+
+clore_and_storm_Mar19_dict
+
+big_list = []
+for key, values in clore_and_storm_Mar19_dict.items():
+    big_list += [key]
+    big_list += values
+
+len(big_list)
+big_list[:20]
+
+test_set = set(big_list)
+len(test_set)
+
+len(supplemental_list)
+
+big_list = big_list + supplemental_list  #all words so far
+
+def word_list_to_text_file(word_list, text_file_name):
+    outputFile = open(text_file_name, 'w')  
+    for word in word_list: 
+        outputFile.write(word+'\n')
+    outputFile.close()    
+
+word_list_to_text_file(big_list, 'words_list_to_match_shaver_storm.txt')
+
+# get 'words_to_add' and combine with big_list
+
+df_words_to_add = pd.read_excel('words_to_add.xlsx') 
+words_to_add = df_words_to_add.values
+words_to_add = [word[0] for word in words_to_add]
+
+biggest_list = big_list + words_to_add
+biggest_list = sorted(list(set(biggest_list)))
+biggest_list[:25]
+len(biggest_list)
+
+# create vairation on biggest_list 
+# turn into dict
+# pair down in excel? could get dict into df and then into excel
+    # w each line consisting of key root word and value variations
+# then get back into a df and then a dict
+
+biggest_list_variations = add_all_word_variations(biggest_list)
+biggest_list_dict = create_dict_of_word_variations(biggest_list_variations)
+
+def dict_to_csv(word_dict, csv_file_name):
+    outputFile = open(csv_file_name, 'w')  
+    for key in word_dict.keys(): 
+        outputFile.write(key + ',') 
+        for value in word_dict[key]:
+            outputFile.write(value + ',') 
+        outputFile.write('\n') 
+    outputFile.close()    
+
+
+dict_to_csv(biggest_list_dict, 'biggest_list_from_dict.csv')
+
+# take biggest_list_from_dict_paired.csv  -  and put into dict.
+    # how? put into df?
+    # or direct into dict with open function -- maybe better?
+    # then i'll have my foundation dictionary.
+    # will then need a dict from those keys to the valence/intensity score
+    # then -- make graphs verticle and color bars according to valence/intensity
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+#word_list_to_text_file(biggest_list, 'biggest_word_list.txt')
 
 
