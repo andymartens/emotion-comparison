@@ -995,6 +995,8 @@ def dict_to_csv(word_dict, csv_file_name):
 
 dict_to_csv(biggest_list_dict, 'biggest_list_from_dict.csv')
 
+
+# LEFT OFF MON NIGHT, MARCH 30
 # take biggest_list_from_dict_paired.csv  -  and put into dict.
     # how? put into df?
     # or direct into dict with open function -- maybe better?
@@ -1002,8 +1004,62 @@ dict_to_csv(biggest_list_dict, 'biggest_list_from_dict.csv')
     # will then need a dict from those keys to the valence/intensity score
     # then -- make graphs verticle and color bars according to valence/intensity
 
+import csv
+
+# takes csv with root word in first col and variations in subseq cols
+# and converts it to a dict with key as root words and variations as values
+def convert_csv_variations_to_dict(csv_file):
+    root_to_variations_dict = {}
+    with open(csv_file, 'rU') as csvfile:
+        reader = csv.reader(csvfile)
+        for row in reader:
+            root_to_variations_dict[row[0]] = [word for word in row[1:] if word != '']
+    return root_to_variations_dict
+
+root_to_variations_dict = convert_csv_variations_to_dict('biggest_list_from_dict_paired.csv')
+root_to_variations_dict.pop('root')
+
+len(root_to_variations_dict.keys())
+root_to_variations_dict['happy']
 
 
-#word_list_to_text_file(biggest_list, 'biggest_word_list.txt')
+# get list of emo words with valence and arousal ratings (Warriner et al csv file)
+# and turn into dict with word as key and valence and arousal and product of the
+# two numbers as values
+
+def convert_csv_word_ratings_to_dict(csv_file):
+    word_to_ratings_dict = {}
+    with open(csv_file, 'rU') as csvfile:
+        reader = csv.reader(csvfile)
+        next(reader, None)  # skip the headers
+        for row in reader:
+            word_to_ratings_dict[row[1]] = [float(row[2]), float(row[5]), float(row[2])*float(row[5])]
+    return word_to_ratings_dict
+
+root_to_ratings_dict = convert_csv_word_ratings_to_dict('Ratings_Warriner_et_al.csv')
+
+len(root_to_ratings_dict.keys())
+root_to_ratings_dict['abandon']
+
+
+# next: 
+# pickle both dicts
+# in code_emo_app.py file, unpickle dicts
+# run graph once with this new dict
+# alter graph so it's verticle
+# make shade or hue or transparency of bars in graph represent my product-intensity score
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
