@@ -1038,6 +1038,13 @@ def convert_csv_word_ratings_to_dict(csv_file):
 
 root_to_ratings_dict = convert_csv_word_ratings_to_dict('Ratings_Warriner_et_al.csv')
 
+# need to create more keys for words that are in root_to_variations dict but
+# not in root_to_ratings dict. so:
+# if word in root_to_variations is not a key in root_to_ratings, then create
+# that key in root_to_ratings and make the values... the values for the first
+# variation on root_to_variations. if 
+
+
 len(root_to_ratings_dict.keys())
 root_to_ratings_dict['abandon']
 
@@ -1050,7 +1057,11 @@ root_to_ratings_dict['abandon']
 # make shade or hue or transparency of bars in graph represent my product-intensity score
 
 
+with open('root_to_variations_dict.pkl', 'w') as picklefile:
+    pickle.dump(root_to_variations_dict, picklefile)
 
+with open('root_to_ratings_dict.pkl', 'w') as picklefile:
+    pickle.dump(root_to_ratings_dict, picklefile)
 
 
 

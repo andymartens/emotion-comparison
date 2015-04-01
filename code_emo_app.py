@@ -152,7 +152,7 @@ def get_emotion_corpus2_to_corpus1_ratios(alphabetical_emotion_counts_corpus1, a
 def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
     X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
     Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
-    fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
+    fig = plt.figure(figsize=(10, 6))  #add this to set resolution: , dpi=100
     sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
     sns.despine(left=True)
     plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
@@ -163,6 +163,214 @@ def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_co
     #this tight_layout method fixes problem of x-axis labels cut off in saved figure:    
     plt.tight_layout()
     plt.savefig('static_test/corpus1_to_corpus2.png')
+
+# alt version of above function, to play with:
+# this is working ok. need to reverse order so biggest vaules on top.
+# def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
+X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+plt.figure(figsize=(8, 12))  #add this to set resolution: , dpi=100
+barlist = plt.barh(np.array(range(len(X))), np.array(Y))
+sns.despine(left=True)
+plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
+#plt.xticks(rotation=75)
+plt.yticks(np.array(range(len(X))) + .5, np.array(X), fontsize=15)
+plt.xlim(1, 3.05)
+plt.xlabel('Frequency in {} relative to {}'.format(corpus1_name, corpus2_name), fontsize=15)
+#this tight_layout method fixes problem of x-axis labels cut off in saved figure:    
+for i in range(len(X)):
+    if Y[i] < 1.6:    
+        barlist[i].set_color((0.0, 0.6, 0.0))
+        barlist[i].set_alpha(Y[i]/3)
+    else:    
+        barlist[i].set_color((0.6, 0.0, 0.0))
+        barlist[i].set_alpha(Y[i]/3)    
+plt.tight_layout()
+plt.savefig('static_test/corpus1_to_corpus2.png')
+
+
+# get Xs and Ys to play w:
+corpus1_alphabetical_counts_list = corpus_to_alphabetical_emotion_counts(dream_corpus_clean_2, root_to_variations_dict)
+corpus2_alphabetical_counts_list = corpus_to_alphabetical_emotion_counts(waking_corpus_clean_2, root_to_variations_dict)
+corpus1_to_corpus2_ratios = get_emotion_corpus1_to_corpus2_ratios(corpus1_alphabetical_counts_list, corpus2_alphabetical_counts_list)
+corpus2_to_corpus1_ratios = get_emotion_corpus2_to_corpus1_ratios(corpus1_alphabetical_counts_list, corpus2_alphabetical_counts_list)
+sorted_emotion_corpus1_to_corpus2_ratios = corpus1_to_corpus2_ratios
+sorted_emotion_corpus2_to_corpus1_ratios = corpus2_to_corpus1_ratios
+corpus1_name = 'Dreams'
+corpus2_name = 'Real-life'
+
+
+# above works ok. but compare to this syntax from web:
+from matplotlib import rcParams
+
+#colorbrewer2 Dark2 qualitative color table
+#dark2_colors = brewer2mpl.get_map('Dark2', 'Qualitative', 7).mpl_colors
+
+rcParams['figure.figsize'] = (10, 6)
+rcParams['figure.dpi'] = 150
+#rcParams['axes.color_cycle'] = dark2_colors
+rcParams['lines.linewidth'] = 2
+rcParams['axes.facecolor'] = 'white'  #this is the background color of the grid area
+rcParams['font.size'] = 14
+rcParams['patch.edgecolor'] = 'white'
+#rcParams['patch.facecolor'] = dark2_colors[0]
+rcParams['font.family'] = 'StixGeneral'
+
+
+def remove_border(axes=None, top=False, right=False, left=True, bottom=True):
+    """
+    Minimize chartjunk by stripping out unnecesasry plot borders and axis ticks
+    
+    The top/right/left/bottom keywords toggle whether the corresponding plot border is drawn
+    """
+    ax = axes or plt.gca()
+    ax.spines['top'].set_visible(top)
+    ax.spines['right'].set_visible(right)
+    ax.spines['left'].set_visible(left)
+    ax.spines['bottom'].set_visible(bottom)
+    
+    #turn off all ticks
+    ax.yaxis.set_ticks_position('none')
+    ax.xaxis.set_ticks_position('none')
+    
+    #now re-enable visibles
+    if top:
+        ax.xaxis.tick_top()
+    if bottom:
+        ax.xaxis.tick_bottom()
+    if left:
+        ax.yaxis.tick_left()
+    if right:
+        ax.yaxis.tick_right()
+
+
+emotion = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+ratio = [round(freq[1], 2) for freq in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+intensity = [.2, .7, .7, .9, .1, .8, .7, .6, .1, .5, 
+             .4, .1, .6, .9, .4, .7, .9, .8, .7, .6]
+
+grad = pd.DataFrame({'ratio' : ratio, 'emotion': emotion, 'intensity': intensity})
+plt.figure(figsize=(3, 8))
+#change = grad.change[grad.change > 0]  #in future step, just create one long list of ratios and select the top 20 here (and bottom 20 when do other/second graph)
+#city = grad.city[grad.change > 0]
+#intensity = grad.intensity[grad.change > 0]
+#ratio = grad.ratio
+#emotion = grad.emotion
+#intensity = grad.intensity
+
+pos = np.arange(len(emotion))
+plt.title('1995-2005 Change in HS graduation rate')
+barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
+# the values for bars or lines or whatever is plotted. and these values are now put 
+# into barlist object so i can use them below, e.g., loop through them and give the 
+# bars some new attributes
+
+#add the numbers to the side of each bar
+for p, e, r in zip(pos, emotion, ratio):
+    plt.annotate(str(r), xy=(r + .25, p + .5), va='center')
+
+#shade the bars based on intensity. it's looping through these values for the bars
+# and redrawsor re-does the bar with the new attribute
+for i in range(len(emotion)):
+    the_emotion = emotion[i]
+    if root_to_ratings_dict[the_emotion][0] > 5:    
+        barlist[i].set_color((0.0, 0.6, 0.0))
+        barlist[i].set_alpha(root_to_ratings_dict[the_emotion][2] / 60)
+    else:    
+        barlist[i].set_color((0.6, 0.0, 0.0))
+        barlist[i].set_alpha(root_to_ratings_dict[the_emotion][2] / 60)
+plt.savefig('static_test/corpus1_to_corpus2_ALT.png')
+
+# end of plotting syntax
+
+root_to_ratings_dict['cry']
+root_to_variations_dict['crying']
+# ok, problem is that not in this dictionary!? becasue not all words in the
+# root to variations dicdt are in the big root to ratings dict!
+# but at least one of the words will be. so if can't find key in root_to_ratings dict
+# then go to the first value word in variation dict and search for that, and so on
+# code: if key from root_to_variations_dict in list of keys from root_to_ratings_dict
+# then all's good. elif second variation from root_to_variations_dict is in 
+# root_to_ratings_dict, then create new key in root_to_ratings_dict with the key
+# from the root for root_to_variations_dict and give it the ratings of the second
+# variation.  EASIER AND MORE ROBUST WAY TO DO THIS?
+test_list = ['fear', 'bummed', 'cocky', 'cheeky', 'challenged']
+testing_root_to_variations_dict = {}
+for emo in test_list:
+    testing_root_to_variations_dict[emo] = root_to_variations_dict[emo]
+
+
+# creating a new root to ratings dict that will correspond to the words 
+# in the root to variations dict.
+# this works gret. make into functino and document this so can repeat it
+# when/if refine the emo to variations list.
+corresponding_root_to_ratings_dict = {}
+for key in root_to_variations_dict.keys():
+    #ratings_dict = defaultdict(list)   
+    ratings_dict = {'valence': [], 'arousal': [], 'intensity': []}
+    for variation in root_to_variations_dict[key]:
+        if variation in root_to_ratings_dict:
+            ratings_dict['valence'].append(root_to_ratings_dict[variation][0])
+            ratings_dict['arousal'].append(root_to_ratings_dict[variation][1])
+            ratings_dict['intensity'].append(root_to_ratings_dict[variation][2])
+        else:
+            ratings_dict['valence'].append(np.nan)
+            ratings_dict['arousal'].append(np.nan)
+            ratings_dict['intensity'].append(np.nan)
+# figure out what words in variations dict aren't in ratings dict
+# maybe these should be cut out of variations dict too
+# though now they'll get a nan for the ratings
+    mean_valence = round(np.nanmean(ratings_dict['valence']), 4)
+    mean_arousal = round(np.nanmean(ratings_dict['arousal']), 4)
+    mean_intensity = round(np.nanmean(ratings_dict['intensity']), 4)
+    corresponding_root_to_ratings_dict[key] = [mean_valence, mean_arousal, mean_intensity]
+
+len(corresponding_root_to_ratings_dict)
+len(root_to_variations_dict)
+
+
+
+
+
+test_dict = {'a': [4, 3, 2], 'b': [8, 7, 1]}
+for key in test_dict:
+    print key
+
+test_dict['a'].append(14)
+
+
+#############################################################
+# garbage - just testing stuff out here.
+intenseness_list = []
+for key in root_to_ratings_dict.keys():
+    intenseness_list.append(root_to_ratings_dict[key][2])
+
+len(intenseness_list)
+np.max(intenseness_list)
+np.min(intenseness_list)
+# ok take this min and max to fig out what to divide by above to get alphas, 60?
+
+
+#cutomize ticks
+ticks = plt.yticks(pos + .5, emotion)
+xt = plt.xticks()[0]
+plt.xticks(xt, [' '] * len(xt))
+#minimize chartjunk
+remove_border(left=False, bottom=False)
+plt.grid(axis = 'x', color ='white', linestyle='-')
+#set plot limits
+plt.ylim(pos.max() + 1, pos.min() - 1)
+plt.xlim(0, 3.5)
+############################################################
+
+
+
+
+
+
+
+
+
 
 
 #plot  -  TURN INTO FUNCTION:
@@ -197,6 +405,7 @@ def corpus_to_alphabetical_emotion_counts(corpus, emotion_to_root_dict):
     return alphabetical_emotions_w_counts_list
 
 
+
 #corpus_lower = corpus_lowercase(waking_corpus_clean_2)
 #len(corpus_lower)
 #corpus_lower_spelling = corpus_spelling_correct(corpus_lower)
@@ -223,6 +432,7 @@ def plot_alphabetical_lists(alphabetical_emotion_counts_corpus1, alphabetical_em
     plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, corpus2_to_corpus1_ratios)
 
 
+
 ##############################################################################
 #master function -- takes input of corpuses and outputs 2 plots:
 def corpuses_to_plot(corpus1, corpus2, corpus1_name, corpus2_name, emotion_to_root_dict):
@@ -230,6 +440,9 @@ def corpuses_to_plot(corpus1, corpus2, corpus1_name, corpus2_name, emotion_to_ro
     corpus2_alphabetical_counts_list = corpus_to_alphabetical_emotion_counts(corpus2, emotion_to_root_dict)
     plot_alphabetical_lists(corpus1_alphabetical_counts_list, corpus2_alphabetical_counts_list, corpus1_name, corpus2_name)
 ###############################################################################
+
+
+
 
 #corpus1_alphabetical_counts_list = corpus_to_alphabetical_emotion_counts(dream_corpus_clean_2, clore_and_storm_Mar19_dict)
 #corpus1_alphabetical_counts_list[:20]
@@ -259,11 +472,20 @@ def corpuses_to_plot(corpus1, corpus2, corpus1_name, corpus2_name, emotion_to_ro
 corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', clore_and_storm_Mar19_dict)
 
 
-#--------- RUN WEB APP SERVER ------------#
+#to get pickled dicts:
+with open('root_to_variations_dict.pkl', 'r') as picklefile:
+    root_to_variations_dict = pickle.load(picklefile)
 
-# Start the app server on port 80
-# (The default website port)
-#app.run(host='0.0.0.0', port=80)
+with open('root_to_ratings_dict.pkl', 'r') as picklefile:
+    root_to_ratings_dict = pickle.load(picklefile)
+
+
+corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', root_to_variations_dict)
+
+
+
+
+
 
 
 
