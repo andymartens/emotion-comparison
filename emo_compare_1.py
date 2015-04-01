@@ -48,11 +48,11 @@ lemma('irritate')  #this could be used to change words back to the root in the c
 
 
 #get fletcher emo word list to compare:
-datafile = open('emotion_words_fletcher.txt', 'r')
-data = []
-for row in datafile:
-    data.append(row.strip())
-emo_words_fletcher = data
+#datafile = open('emotion_words_fletcher.txt', 'r')
+#data = []
+#for row in datafile:
+#    data.append(row.strip())
+#emo_words_fletcher = data
 
 
 #get storm emo words
@@ -79,7 +79,6 @@ for word in words_storm_2:
 outputFile.close()    
 
 
-
 #get clore emo words
 datafile = open('emotion_words_clore.txt', 'r')
 data = []
@@ -102,7 +101,6 @@ for word in words_clore_2:
 outputFile.close()    
 
 
-
 #put storm and clore words together
 all_words = words_clore + words_storm_2 + emo_words_fletcher
 len(set(all_words))
@@ -121,8 +119,6 @@ for word in all_words_sorted_unique:
 outputFile.close()    
 
 
-#in text doc, go through words and remove words w non-emo primary meanings
-
 #get words back:
 datafile = open('all_emo_words_1.txt', 'r')
 data = []
@@ -132,12 +128,10 @@ for row in datafile:
 all_emo_words_2 = data
 
 
-test_list = ['fear', 'abandon', 'awe', 'shame', 'guilt', 'joy', 'happy', 'horrifying']
-variations = add_lexeme_variations(test_list)
-variations_real_words = eliminate_nonwords(variations)  #combine with above step/function
-variations_w_adverbs = add_adverb_variations(variations_real_words)
-
-
+#test_list = ['fear', 'abandon', 'awe', 'shame', 'guilt', 'joy', 'happy', 'horrifying']
+#variations = add_lexeme_variations(test_list)
+#variations_real_words = eliminate_nonwords(variations)  #combine with above step/function
+#variations_w_adverbs = add_adverb_variations(variations_real_words)
 
 
 #add variations on emo words to the list
@@ -149,19 +143,19 @@ def add_lexeme_variations(word_list):
     all_words = lexemes_list + word_list
     return sorted(list(set(all_words)))
 
-lexemes_list = []
-for emo_word in all_emo_words_2:
-    lexemes = lexeme(emo_word)
-    lexemes_list = lexemes_list + lexemes
-
-len(lexemes_list)
-
-all_emo_words_3 = all_emo_words_2 + lexemes_list
-len(all_emo_words_3)
-
-all_emo_words_4 = sorted(list(set(all_emo_words_3)))
-len(all_emo_words_4)
-all_emo_words_4[:100]
+#lexemes_list = []
+#for emo_word in all_emo_words_2:
+#    lexemes = lexeme(emo_word)
+#    lexemes_list = lexemes_list + lexemes
+#
+#len(lexemes_list)
+#
+#all_emo_words_3 = all_emo_words_2 + lexemes_list
+#len(all_emo_words_3)
+#
+#all_emo_words_4 = sorted(list(set(all_emo_words_3)))
+#len(all_emo_words_4)
+#all_emo_words_4[:100]
 
 #get adverbs here. just add ly to all words. and then go through and remove words
 
@@ -184,20 +178,21 @@ def add_adverb_variations(word_list):
     all_words = eliminate_nonwords(all_words)
     return all_words
     
-adverbs = []
-for word in all_emo_words_4:
-    adverbs.append(word+'ly')
-    
-len(adverbs)
-adverbs[20:70]
+#adverbs = []
+#for word in all_emo_words_4:
+#    adverbs.append(word+'ly')
+#    
+#len(adverbs)
+#adverbs[20:70]
 
-all_emo_words_5 = all_emo_words_4 + adverbs 
-all_emo_words_5 = sorted(all_emo_words_5)
-len(all_emo_words_5)
-all_emo_words_5[:20]
+#all_emo_words_5 = all_emo_words_4 + adverbs 
+#all_emo_words_5 = sorted(all_emo_words_5)
+#len(all_emo_words_5)
+#all_emo_words_5[:20]
+
 
 #get words to text doc 
-outputFile = open('all_emo_words_3.txt', 'w')  #creates a file object called outputFile. It also 
+outputFile = open('all_emo_words_3.txt', 'w')
 for word in all_emo_words_5: 
     outputFile.write(word+'\n')
 outputFile.close()    
@@ -209,23 +204,23 @@ data = []
 for row in datafile:
     data.append(row.strip())
 
-all_emo_words_6 = data
-len(all_emo_words_6)
+#all_emo_words_6 = data
+#len(all_emo_words_6)
 
 
 #remove words that aren't real from all_emo_words_6.
 
-d = enchant.Dict("en_US")
-d.check("yearnly")
-
-all_emo_words_7 = []
-for word in all_emo_words_6:
-    if d.check(word):
-        all_emo_words_7.append(word)
-
-len(all_emo_words_7)
-all_emo_words_7[100:200]
-
+#d = enchant.Dict("en_US")
+#d.check("yearnly")
+#
+#all_emo_words_7 = []
+#for word in all_emo_words_6:
+#    if d.check(word):
+#        all_emo_words_7.append(word)
+#
+#len(all_emo_words_7)
+#all_emo_words_7[100:200]
+#
 
 #words_not_in_new_list = []
 #for word in emo_words_fletcher:
@@ -237,20 +232,19 @@ all_emo_words_7[100:200]
 
 
 #function that takes other prior functions and adds all variations to 
-#a words list, i.e., lexeme variations and adverb variations:
+#a words list, and makes sure they're real words. 
+#i.e., lexeme variations and adverb variations and then eliminates non-words:
 def add_all_word_variations(word_list):
     new_word_list = add_lexeme_variations(word_list)
     new_word_list = add_adverb_variations(new_word_list)
     return new_word_list
 
 
-
-
 #get into text file again and go through manually
-outputFile = open('all_emo_words_4.txt', 'w')  #creates a file object called outputFile. It also 
-for word in all_emo_words_7: 
-    outputFile.write(word+'\n')
-outputFile.close()    
+#outputFile = open('all_emo_words_4.txt', 'w')  #creates a file object called outputFile. It also 
+#for word in all_emo_words_7: 
+#    outputFile.write(word+'\n')
+#outputFile.close()    
 
 #OK, SAVE COMPLETE LIST TO all_emo_words_4.txt BUT IT'S HUGE. TOO BIG
 #WORK LATER ON CUTTING DOWN SOMEHOW TO WORDS TAHT ARE MORE CLEARLY EMOTION
@@ -259,8 +253,6 @@ outputFile.close()
 
 #LOOK AGAIN AT WHAT WORDS WEREN'T CAUGHT BY STORM AND CLORE. ARE THEY IMPORTANT?
 
-
-
 #LEFT OFF, LEFT OFF
 #AT THIS POINT, NEED TO GO THROUGH all_emo_words_4.txt AND TAKE OUT BAD WORDS
 #(E.G., WIND) AND THEN GO THROUGH CODE FROM THIS POINT ON.
@@ -268,10 +260,10 @@ outputFile.close()
 #AND THEN DO BELOW STUFF
 
 
-
 #NEXT STEP: dict that goes from the variations on a word to the root (or shortest form)
 # make dict with stem the key and the actual words values. 
 #then make dict of stemmed word to one of the words (shortest word?)
+
 
 #helper function for create_dict_of_word_variations: makes values unique:
 def make_dict_values_unique(word_to_variations_dict):
@@ -305,32 +297,32 @@ def create_dict_of_word_variations(word_list):
     return emotion_words_complete_dict
 
 
-stemmer = SnowballStemmer('english')
-emotion_words_complete_dict = defaultdict(list)
-
-for word in all_emo_words_7:
-    #word = TextBlob(word)
-    stemmed_word1 = stemmer.stem(word)
-    for word2 in all_emo_words_7:
-        #word2 = TextBlob(word2)
-        stemmed_word2 = stemmer.stem(word2)
-        if stemmed_word1 == stemmed_word2:
-            emotion_words_complete_dict[stemmed_word1].append(word2)
-
-len(emotion_words_complete_dict.keys())
+#stemmer = SnowballStemmer('english')
+#emotion_words_complete_dict = defaultdict(list)
+#
+#for word in all_emo_words_7:
+#    #word = TextBlob(word)
+#    stemmed_word1 = stemmer.stem(word)
+#    for word2 in all_emo_words_7:
+#        #word2 = TextBlob(word2)
+#        stemmed_word2 = stemmer.stem(word2)
+#        if stemmed_word1 == stemmed_word2:
+#            emotion_words_complete_dict[stemmed_word1].append(word2)
+#
+#len(emotion_words_complete_dict.keys())
 
 
 #make ea list of values a set:
 
-for key in emotion_words_complete_dict:
-    emotion_words_complete_dict[key] = list(set(emotion_words_complete_dict[key]))
-
-
-#test_dict = {}
-for i, key in enumerate(emotion_words_complete_dict.keys()):
-    if i < 10:        
-        print key, emotion_words_complete_dict[key]
-        #test_dict[key] = emotion_words_complete_dict[key]
+#for key in emotion_words_complete_dict:
+#    emotion_words_complete_dict[key] = list(set(emotion_words_complete_dict[key]))
+#
+#
+##test_dict = {}
+#for i, key in enumerate(emotion_words_complete_dict.keys()):
+#    if i < 10:        
+#        print key, emotion_words_complete_dict[key]
+#        #test_dict[key] = emotion_words_complete_dict[key]
 
 
 #test_dict = {'uncomfort': ['uncomfortable'], 'consider': ['consideration', 
@@ -340,12 +332,12 @@ for i, key in enumerate(emotion_words_complete_dict.keys()):
 
 #replace key with first or shortest word in values
 
-for key in emotion_words_complete_dict.keys():
-    new_key = emotion_words_complete_dict[key][0]
-    for word in emotion_words_complete_dict[key]:
-        if word[-2:] == 'ed':
-            new_key = word  
-    emotion_words_complete_dict[new_key] = emotion_words_complete_dict.pop(key)
+#for key in emotion_words_complete_dict.keys():
+#    new_key = emotion_words_complete_dict[key][0]
+#    for word in emotion_words_complete_dict[key]:
+#        if word[-2:] == 'ed':
+#            new_key = word  
+#    emotion_words_complete_dict[new_key] = emotion_words_complete_dict.pop(key)
 
 
 #pickle this list so i don't have to go through above steps to get the emo_dict
@@ -358,19 +350,14 @@ with open('emo_words_dict.pkl', 'w') as picklefile:
 with open('emo_words_dict.pkl', 'r') as picklefile:
     emotion_words_complete_dict_2 = pickle.load(picklefile)
 
-len(emotion_words_complete_dict_2)
 
 #write complete emo words to file so can view
-outputFile = open('all_emo_words_5.txt', 'w')  #creates a file object called outputFile. It also 
-for key in emotion_words_complete_dict_2.keys():
-    for word in emotion_words_complete_dict_2[key]: 
-        outputFile.write(word+'\n')
-outputFile.close()    
+#outputFile = open('all_emo_words_5.txt', 'w')  #creates a file object called outputFile. 
+#for key in emotion_words_complete_dict_2.keys():
+#    for word in emotion_words_complete_dict_2[key]: 
+#        outputFile.write(word+'\n')
+#outputFile.close()    
 
-
-
-'emotion_words_storm_2.txt'
-'emotion_words_clore_2.txt'
 
 def open_emo_words_and_to_dict(text_file):
     #get words back:
@@ -405,10 +392,7 @@ clore_words = open_emo_words_and_to_list('emotion_words_clore_2.txt')
 fletcher_words = open_emo_words_and_to_list('emotion_words_fletcher.txt')
 
 
-storm_words[:10]
-clore_words[:10]
-fletcher_words[:10]
-
+# don't think this matters. skip:
 #sent words to txt file and back to get rid of unicode
 def send_words_to_txt_and_back(word_list):
     outputFile = open('temp_file.txt', 'w')  
@@ -422,7 +406,6 @@ def send_words_to_txt_and_back(word_list):
     datafile.close()
     return data
 
-
 storm_words = send_words_to_txt_and_back(storm_words)
 clore_words = send_words_to_txt_and_back(clore_words)
 fletcher_words = send_words_to_txt_and_back(fletcher_words)
@@ -434,14 +417,9 @@ def word_list_to_text_file(word_list, text_file_name):
         outputFile.write(word+'\n')
     outputFile.close()    
 
-
 word_list_to_text_file(storm_words, 'emotion_words_storm_3.txt')
 word_list_to_text_file(clore_words, 'emotion_words_clore_3.txt')
 word_list_to_text_file(fletcher_words, 'emotion_words_fletcher_3.txt')
-
-
-
-
 
 
 #comare two word lists:
@@ -492,21 +470,10 @@ with open('clore_and_storm_words_Mar19_dict.pkl', 'r') as picklefile:
     clore_and_storm_Mar19_dict = pickle.load(picklefile)
 ######################################################################
 
-for key in clore_and_storm_Mar19_dict.keys():
-    print key
-
-clore_and_storm_Mar19_dict['ed']
-
-
-
-
-
-
-
-
 
 #now that have dict of emo words...
-#get dream and waking corpuses ready to work with:
+#get dream and waking corpuses ready to work with.
+#but final code for this on code_emo_app.py can ignore here:
 
 #connect to database:
 client = pymongo.MongoClient()  #create a MongoClient to the running mongod instance:
@@ -695,6 +662,7 @@ def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_co
 #count_docs_w_ea_emotion(corpus, emotion_to_root_dict)
 #sort_emotion_counts_alphabetically(emotion_to_count_dict)
 
+
 def corpus_to_alphabetical_emotion_counts(corpus, emotion_to_root_dict):
     corpus_lower = corpus_lowercase(corpus)
     #corpus_lower_spelling = corpus_spelling_correct(corpus_lower)
@@ -748,14 +716,7 @@ def corpuses_to_plot(corpus1, corpus2, corpus1_name, corpus2_name, emotion_to_ro
 
 #run master function. takes each corpus of docs and the name for each corpus, and the dictionary of root emotion word to variations of that word
 corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', clore_and_storm_Mar19_dict)
-
-
-# 3. read over flask link and start to think about how to get into web-app
-
-
-
-
-
+######################################################################################
 
 
 #maybe to add? 
@@ -938,6 +899,14 @@ supplemental_list = ['unworthy',
  'bleakness']
 
 
+
+# get two dictionaries ready:
+# root_to_variations_dict. this has each emo word and values are list of variations
+# and the coresponding_root_to_ratings_dict. this has each emo root/key in 
+# root_to_variations_dict and the valence, arousal, and intensity ratings for 
+# root word as the values
+
+# first, create big list of emo words that includes all variations of words:
 clore_and_storm_Mar19_dict
 
 big_list = []
@@ -964,7 +933,6 @@ def word_list_to_text_file(word_list, text_file_name):
 word_list_to_text_file(big_list, 'words_list_to_match_shaver_storm.txt')
 
 # get 'words_to_add' and combine with big_list
-
 df_words_to_add = pd.read_excel('words_to_add.xlsx') 
 words_to_add = df_words_to_add.values
 words_to_add = [word[0] for word in words_to_add]
@@ -973,6 +941,7 @@ biggest_list = big_list + words_to_add
 biggest_list = sorted(list(set(biggest_list)))
 biggest_list[:25]
 len(biggest_list)
+
 
 # create vairation on biggest_list 
 # turn into dict
@@ -992,11 +961,9 @@ def dict_to_csv(word_dict, csv_file_name):
         outputFile.write('\n') 
     outputFile.close()    
 
-
 dict_to_csv(biggest_list_dict, 'biggest_list_from_dict.csv')
 
 
-# LEFT OFF MON NIGHT, MARCH 30
 # take biggest_list_from_dict_paired.csv  -  and put into dict.
     # how? put into df?
     # or direct into dict with open function -- maybe better?
@@ -1016,24 +983,35 @@ def convert_csv_variations_to_dict(csv_file):
             root_to_variations_dict[row[0]] = [word for word in row[1:] if word != '']
     return root_to_variations_dict
 
+
+# IN FUTURE, TO ALTER CORE EMO WORD DICT, START W:
+# 1. OPEN 'biggest_list_from_dict_paired.csv' IN EXCEL. THE FIRST COL IS THE 
+# ROOT WORD, THE SUBSQ COLS ARE VARIATIONS. HERE I CAN MESS WITH BY HAND, ELIM 
+# WORDS AND VARIATIONS, ADD WORDS AND VARIATIONS, ETC.
+# 2. DO THE FOLLOWING TO CONVERT THIS .CSV FILE TO A DICT WITH ROOT WORD AS
+# THE KEY AND VARIATIONS OF WORD AS THE VALUES
 root_to_variations_dict = convert_csv_variations_to_dict('biggest_list_from_dict_paired.csv')
 root_to_variations_dict.pop('root')
 
 len(root_to_variations_dict.keys())
 root_to_variations_dict['happy']
 
-
+#HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 # get list of emo words with valence and arousal ratings (Warriner et al csv file)
 # and turn into dict with word as key and valence and arousal and product of the
 # two numbers as values
 
+# 3. CONVERT THE LIST OF WARRINER WORDS AND RATINGS TO A DICT
 def convert_csv_word_ratings_to_dict(csv_file):
     word_to_ratings_dict = {}
     with open(csv_file, 'rU') as csvfile:
         reader = csv.reader(csvfile)
         next(reader, None)  # skip the headers
-        for row in reader:
-            word_to_ratings_dict[row[1]] = [float(row[2]), float(row[5]), float(row[2])*float(row[5])]
+        for row in reader:  
+            valence = float(row[2]) - 5.0
+            arousal = float(row[5])
+            intensity = valence * arousal
+            word_to_ratings_dict[row[1]] = [valence, arousal, intensity]
     return word_to_ratings_dict
 
 root_to_ratings_dict = convert_csv_word_ratings_to_dict('Ratings_Warriner_et_al.csv')
@@ -1043,10 +1021,6 @@ root_to_ratings_dict = convert_csv_word_ratings_to_dict('Ratings_Warriner_et_al.
 # if word in root_to_variations is not a key in root_to_ratings, then create
 # that key in root_to_ratings and make the values... the values for the first
 # variation on root_to_variations. if 
-
-
-len(root_to_ratings_dict.keys())
-root_to_ratings_dict['abandon']
 
 
 # next: 
@@ -1064,6 +1038,59 @@ with open('root_to_ratings_dict.pkl', 'w') as picklefile:
     pickle.dump(root_to_ratings_dict, picklefile)
 
 
+# ok, problem is that not in this dictionary!? becasue not all words in the
+# root to variations dicdt are in the big root to ratings dict!
+# but at least one of the words will be. so if can't find key in root_to_ratings dict
+# then go to the first value word in variation dict and search for that, and so on
+# code: if key from root_to_variations_dict in list of keys from root_to_ratings_dict
+# then all's good. elif second variation from root_to_variations_dict is in 
+# root_to_ratings_dict, then create new key in root_to_ratings_dict with the key
+# from the root for root_to_variations_dict and give it the ratings of the second
+# variation.  EASIER AND MORE ROBUST WAY TO DO THIS?
+#test_list = ['fear', 'bummed', 'cocky', 'cheeky', 'challenged']
+#testing_root_to_variations_dict = {}
+#for emo in test_list:
+#    testing_root_to_variations_dict[emo] = root_to_variations_dict[emo]
+
+
+# creating a new root to ratings dict that will correspond to the words 
+# in the root to variations dict.
+# this works gret. make into functino and document this so can repeat it
+# when/if refine the emo to variations list.
+
+# 4. CREATE A NEW ROOT TO RATINGS DICT WHOSE ROOTS ARE THE SAME WORDS AS THE ROOTS
+# IN THE ROOTS_TO_VARIATIONS_DICT AND WITH VALENCE, AROUSAL, AND INTENSITY RATINGS
+# THAT ARE MEANS OF RATINGS OF ALL VARIATIONS ON EACH ROOT (INCLUDING THE ROOT)
+def create_corresponding_root_to_ratings_dict(root_to_variations_dict, root_to_ratings_dict):
+    corresponding_root_to_ratings_dict = {}
+    for key in root_to_variations_dict.keys():
+        #ratings_dict = defaultdict(list)   
+        ratings_dict = {'valence': [], 'arousal': [], 'intensity': []}
+        for variation in root_to_variations_dict[key]:
+            if variation in root_to_ratings_dict:
+                ratings_dict['valence'].append(root_to_ratings_dict[variation][0])
+                ratings_dict['arousal'].append(root_to_ratings_dict[variation][1])
+                ratings_dict['intensity'].append(root_to_ratings_dict[variation][2])
+            else:
+                ratings_dict['valence'].append(np.nan)
+                ratings_dict['arousal'].append(np.nan)
+                ratings_dict['intensity'].append(np.nan)
+        mean_valence = round(np.nanmean(ratings_dict['valence']), 4)
+        mean_arousal = round(np.nanmean(ratings_dict['arousal']), 4)
+        mean_intensity = round(np.nanmean(ratings_dict['intensity']), 4)
+        corresponding_root_to_ratings_dict[key] = [mean_valence, mean_arousal, mean_intensity]
+    return corresponding_root_to_ratings_dict
+
+corresponding_root_to_ratings_dict = create_corresponding_root_to_ratings_dict(root_to_variations_dict, root_to_ratings_dict)
+
+
+len(corresponding_root_to_ratings_dict)
+len(root_to_variations_dict)
+
+# 5. PICKLE THIS NEW corresponding_root_to_ratings_dict (AS WELL AS THE root_to_variations_dict)
+# TO BE USED WITH THE APP TO MAKE GRAPHS, ETC.
+with open('corresponding_root_to_ratings_dict.pkl', 'w') as picklefile:
+    pickle.dump(corresponding_root_to_ratings_dict, picklefile)
 
 
 

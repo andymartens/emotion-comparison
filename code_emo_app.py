@@ -273,83 +273,13 @@ for p, e, r in zip(pos, emotion, ratio):
 # and redrawsor re-does the bar with the new attribute
 for i in range(len(emotion)):
     the_emotion = emotion[i]
-    if root_to_ratings_dict[the_emotion][0] > 5:    
-        barlist[i].set_color((0.0, 0.6, 0.0))
-        barlist[i].set_alpha(root_to_ratings_dict[the_emotion][2] / 60)
+    if corresponding_root_to_ratings_dict[the_emotion][0] > 0:    
+        barlist[i].set_color((0.0, 0.9, 0.0))
+        barlist[i].set_alpha(corresponding_root_to_ratings_dict[the_emotion][2] / 3)
     else:    
-        barlist[i].set_color((0.6, 0.0, 0.0))
-        barlist[i].set_alpha(root_to_ratings_dict[the_emotion][2] / 60)
+        barlist[i].set_color((0.99, 0.0, 0.0))
+        barlist[i].set_alpha(np.abs(corresponding_root_to_ratings_dict[the_emotion][2]) / 3)
 plt.savefig('static_test/corpus1_to_corpus2_ALT.png')
-
-# end of plotting syntax
-
-root_to_ratings_dict['cry']
-root_to_variations_dict['crying']
-# ok, problem is that not in this dictionary!? becasue not all words in the
-# root to variations dicdt are in the big root to ratings dict!
-# but at least one of the words will be. so if can't find key in root_to_ratings dict
-# then go to the first value word in variation dict and search for that, and so on
-# code: if key from root_to_variations_dict in list of keys from root_to_ratings_dict
-# then all's good. elif second variation from root_to_variations_dict is in 
-# root_to_ratings_dict, then create new key in root_to_ratings_dict with the key
-# from the root for root_to_variations_dict and give it the ratings of the second
-# variation.  EASIER AND MORE ROBUST WAY TO DO THIS?
-test_list = ['fear', 'bummed', 'cocky', 'cheeky', 'challenged']
-testing_root_to_variations_dict = {}
-for emo in test_list:
-    testing_root_to_variations_dict[emo] = root_to_variations_dict[emo]
-
-
-# creating a new root to ratings dict that will correspond to the words 
-# in the root to variations dict.
-# this works gret. make into functino and document this so can repeat it
-# when/if refine the emo to variations list.
-corresponding_root_to_ratings_dict = {}
-for key in root_to_variations_dict.keys():
-    #ratings_dict = defaultdict(list)   
-    ratings_dict = {'valence': [], 'arousal': [], 'intensity': []}
-    for variation in root_to_variations_dict[key]:
-        if variation in root_to_ratings_dict:
-            ratings_dict['valence'].append(root_to_ratings_dict[variation][0])
-            ratings_dict['arousal'].append(root_to_ratings_dict[variation][1])
-            ratings_dict['intensity'].append(root_to_ratings_dict[variation][2])
-        else:
-            ratings_dict['valence'].append(np.nan)
-            ratings_dict['arousal'].append(np.nan)
-            ratings_dict['intensity'].append(np.nan)
-# figure out what words in variations dict aren't in ratings dict
-# maybe these should be cut out of variations dict too
-# though now they'll get a nan for the ratings
-    mean_valence = round(np.nanmean(ratings_dict['valence']), 4)
-    mean_arousal = round(np.nanmean(ratings_dict['arousal']), 4)
-    mean_intensity = round(np.nanmean(ratings_dict['intensity']), 4)
-    corresponding_root_to_ratings_dict[key] = [mean_valence, mean_arousal, mean_intensity]
-
-len(corresponding_root_to_ratings_dict)
-len(root_to_variations_dict)
-
-
-
-
-
-test_dict = {'a': [4, 3, 2], 'b': [8, 7, 1]}
-for key in test_dict:
-    print key
-
-test_dict['a'].append(14)
-
-
-#############################################################
-# garbage - just testing stuff out here.
-intenseness_list = []
-for key in root_to_ratings_dict.keys():
-    intenseness_list.append(root_to_ratings_dict[key][2])
-
-len(intenseness_list)
-np.max(intenseness_list)
-np.min(intenseness_list)
-# ok take this min and max to fig out what to divide by above to get alphas, 60?
-
 
 #cutomize ticks
 ticks = plt.yticks(pos + .5, emotion)
@@ -364,8 +294,15 @@ plt.xlim(0, 3.5)
 ############################################################
 
 
+intensity_list = [ratings[2] for ratings in corresponding_root_to_ratings_dict.values()]
+np.nanmean(intensity_list)
+np.nanmin(intensity_list)
+np.nanmax(intensity_list)
 
-
+arousal_list = [ratings[1] for ratings in corresponding_root_to_ratings_dict.values()]
+np.nanmean(arousal_list)
+np.nanmin(arousal_list)
+np.nanmax(arousal_list)
 
 
 
@@ -479,6 +416,13 @@ with open('root_to_variations_dict.pkl', 'r') as picklefile:
 with open('root_to_ratings_dict.pkl', 'r') as picklefile:
     root_to_ratings_dict = pickle.load(picklefile)
 
+with open('corresponding_root_to_ratings_dict.pkl', 'r') as picklefile:
+    corresponding_root_to_ratings_dict = pickle.load(picklefile)
+
+len(corresponding_root_to_ratings_dict)
+corresponding_root_to_ratings_dict['crying']
+root_to_variations_dict['crying']
+
 
 corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', root_to_variations_dict)
 
@@ -492,7 +436,7 @@ corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-li
 
 
 
-#####################################################################
+###################################################################################
 # testing out to look at bayes factors, p-vals, etc.
 
 corpus_wake_lower = corpus_lowercase(waking_corpus_clean_2)
