@@ -1,17 +1,30 @@
 <html>
+
+  <head>
+  <style>
+
+  .graph {
+    display: inline-block;
+    width: 400px;
+    vertical-aligm: top;
+  }
+
+  </style>
+  </head>
+
   <body>
 
-    <p>The graph below shows the 25 emotion words that appeared most frequently
-      in Corpus 1 as compared to Corpus 2. The higher the number, the more
-      represenetative of Corpus 1.</p>
-      <img src="/static/corpus1_to_corpus2.png" width=400  height=200>
-    <p> {{ corpus_one }}  </p>
+<div class="graph">
+    <p>...test...</p>
+      <img src="/static/corpus1_to_corpus2.png" class=graph>
+    <p> documents: {{ corpus_one }}  </p>
+</div>
 
-    <p>The graph below shows the 25 emotion words that appeared most frequently
-      in Corpus 2 as compared to Corpus 1. The higher the number, the more
-      represenetative of Corpus 2.</p>
-      <img src="/static/corpus2_to_corpus1.png" width=400 height=200>
-    <p> {{ corpus_two }}   </p>
+<div class="graph">
+    <p>...test...</p>
+      <img src="/static/corpus2_to_corpus1.png" class=graph>
+    <p> documents: {{ corpus_two }}   </p>
+</div>
 
   </body>
 </html>

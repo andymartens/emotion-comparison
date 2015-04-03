@@ -17,7 +17,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from textblob import TextBlob
 import seaborn as sns
+from matplotlib import rcParams
 
+pd
 #import flask
 #
 ## Initialize the app
@@ -148,46 +150,46 @@ def get_emotion_corpus2_to_corpus1_ratios(alphabetical_emotion_counts_corpus1, a
     return sorted_emotion_corpus2_to_corpus1_ratios
 
 
-#plot  -  TURN INTO FUNCTION:
-def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
-    X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
-    Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
-    fig = plt.figure(figsize=(10, 6))  #add this to set resolution: , dpi=100
-    sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
-    sns.despine(left=True)
-    plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
-    plt.xticks(rotation=75)
-    plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
-    plt.ylim(1, 3.05)
-    plt.ylabel('Frequency in {} relative to {}'.format(corpus1_name, corpus2_name), fontsize=15)
-    #this tight_layout method fixes problem of x-axis labels cut off in saved figure:    
-    plt.tight_layout()
-    plt.savefig('static_test/corpus1_to_corpus2.png')
+#plot  -  COMMENT THIS OUT - NOW REPLACED WITH OTHER FUNCTION:
+#def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
+#    X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
+#    Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
+#    fig = plt.figure(figsize=(10, 6))  #add this to set resolution: , dpi=100
+#    sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
+#    sns.despine(left=True)
+#    plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
+#    plt.xticks(rotation=75)
+#    plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
+#    plt.ylim(1, 3.05)
+#    plt.ylabel('Frequency in {} relative to {}'.format(corpus1_name, corpus2_name), fontsize=15)
+#    #this tight_layout method fixes problem of x-axis labels cut off in saved figure:    
+#    plt.tight_layout()
+#    plt.savefig('static_test/corpus1_to_corpus2.png')
 
 # alt version of above function, to play with:
 # this is working ok. need to reverse order so biggest vaules on top.
 # def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
-X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
-Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
-plt.figure(figsize=(8, 12))  #add this to set resolution: , dpi=100
-barlist = plt.barh(np.array(range(len(X))), np.array(Y))
-sns.despine(left=True)
-plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
-#plt.xticks(rotation=75)
-plt.yticks(np.array(range(len(X))) + .5, np.array(X), fontsize=15)
-plt.xlim(1, 3.05)
-plt.xlabel('Frequency in {} relative to {}'.format(corpus1_name, corpus2_name), fontsize=15)
-#this tight_layout method fixes problem of x-axis labels cut off in saved figure:    
-for i in range(len(X)):
-    if Y[i] < 1.6:    
-        barlist[i].set_color((0.0, 0.6, 0.0))
-        barlist[i].set_alpha(Y[i]/3)
-    else:    
-        barlist[i].set_color((0.6, 0.0, 0.0))
-        barlist[i].set_alpha(Y[i]/3)    
-plt.tight_layout()
-plt.savefig('static_test/corpus1_to_corpus2.png')
-
+#X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+#Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+#plt.figure(figsize=(8, 12))  #add this to set resolution: , dpi=100
+#barlist = plt.barh(np.array(range(len(X))), np.array(Y))
+#sns.despine(left=True)
+#plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
+##plt.xticks(rotation=75)
+#plt.yticks(np.array(range(len(X))) + .5, np.array(X), fontsize=15)
+#plt.xlim(1, 3.05)
+#plt.xlabel('Frequency in {} relative to {}'.format(corpus1_name, corpus2_name), fontsize=15)
+##this tight_layout method fixes problem of x-axis labels cut off in saved figure:    
+#for i in range(len(X)):
+#    if Y[i] < 1.6:    
+#        barlist[i].set_color((0.0, 0.6, 0.0))
+#        barlist[i].set_alpha(Y[i]/3)
+#    else:    
+#        barlist[i].set_color((0.6, 0.0, 0.0))
+#        barlist[i].set_alpha(Y[i]/3)    
+#plt.tight_layout()
+#plt.savefig('static_test/corpus1_to_corpus2.png')
+#
 
 # get Xs and Ys to play w:
 corpus1_alphabetical_counts_list = corpus_to_alphabetical_emotion_counts(dream_corpus_clean_2, root_to_variations_dict)
@@ -197,133 +199,315 @@ corpus2_to_corpus1_ratios = get_emotion_corpus2_to_corpus1_ratios(corpus1_alphab
 sorted_emotion_corpus1_to_corpus2_ratios = corpus1_to_corpus2_ratios
 sorted_emotion_corpus2_to_corpus1_ratios = corpus2_to_corpus1_ratios
 corpus1_name = 'Dreams'
-corpus2_name = 'Real-life'
-
+corpus2_name = 'Real Life'
 
 # above works ok. but compare to this syntax from web:
-from matplotlib import rcParams
-
-#colorbrewer2 Dark2 qualitative color table
-#dark2_colors = brewer2mpl.get_map('Dark2', 'Qualitative', 7).mpl_colors
-
-rcParams['figure.figsize'] = (10, 6)
-rcParams['figure.dpi'] = 150
-#rcParams['axes.color_cycle'] = dark2_colors
-rcParams['lines.linewidth'] = 2
-rcParams['axes.facecolor'] = 'white'  #this is the background color of the grid area
-rcParams['font.size'] = 14
-rcParams['patch.edgecolor'] = 'white'
-#rcParams['patch.facecolor'] = dark2_colors[0]
-rcParams['font.family'] = 'StixGeneral'
 
 
-def remove_border(axes=None, top=False, right=False, left=True, bottom=True):
-    """
-    Minimize chartjunk by stripping out unnecesasry plot borders and axis ticks
-    
-    The top/right/left/bottom keywords toggle whether the corresponding plot border is drawn
-    """
-    ax = axes or plt.gca()
-    ax.spines['top'].set_visible(top)
-    ax.spines['right'].set_visible(right)
-    ax.spines['left'].set_visible(left)
-    ax.spines['bottom'].set_visible(bottom)
-    
-    #turn off all ticks
-    ax.yaxis.set_ticks_position('none')
-    ax.xaxis.set_ticks_position('none')
-    
-    #now re-enable visibles
-    if top:
-        ax.xaxis.tick_top()
-    if bottom:
-        ax.xaxis.tick_bottom()
-    if left:
-        ax.yaxis.tick_left()
-    if right:
-        ax.yaxis.tick_right()
+def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios, corresponding_root_to_ratings_dict):
+    #set some graph parameters:
+    rcParams['figure.figsize'] = (10, 6)
+    rcParams['figure.dpi'] = 150
+    #rcParams['axes.color_cycle'] = dark2_colors
+    rcParams['lines.linewidth'] = 2
+    rcParams['axes.facecolor'] = 'white'  #this is the background color of the grid area
+    rcParams['font.size'] = 14
+    rcParams['patch.edgecolor'] = 'white'
+    #rcParams['patch.facecolor'] = dark2_colors[0]
+    rcParams['font.family'] = 'StixGeneral'
+
+    #a function that gets called later in this function
+    def remove_border(axes=None, top=False, right=False, left=True, bottom=True):
+        """
+        Minimize chartjunk by stripping out unnecesasry plot borders and axis ticks
+        The top/right/left/bottom keywords toggle whether the corresponding plot border is drawn
+        """
+        ax = axes or plt.gca()
+        ax.spines['top'].set_visible(top)
+        ax.spines['right'].set_visible(right)
+        ax.spines['left'].set_visible(left)
+        ax.spines['bottom'].set_visible(bottom)
+        #turn off all ticks
+        ax.yaxis.set_ticks_position('none')
+        ax.xaxis.set_ticks_position('none')
+        #now re-enable visibles
+        if top:
+            ax.xaxis.tick_top()
+        if bottom:
+            ax.xaxis.tick_bottom()
+        if left:
+            ax.yaxis.tick_left()
+        if right:
+            ax.yaxis.tick_right()
+
+    emotion = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+    ratio = [round(freq[1], 2) for freq in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
+    plt.figure(figsize=(5, 8))
+    pos = np.arange(len(emotion))
+    plt.title(corpus1_name + ' / ' + corpus2_name, horizontalalignment='center')
+    barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
+    # the values for bars or lines or whatever is plotted. and these values are now put
+    # into barlist object so i can use them below, e.g., loop through them and give the
+    # bars some new attributes
+
+    #add the numbers to the side of each bar
+    for p, e, r in zip(pos, emotion, ratio):
+        plt.annotate(str(r), xy=(r + .25, p + .5), va='center')
+
+    #shade the bars based on intensity. it's looping through these values for the bars
+    # and re-draws or re-does the bar with the new attribute
+    for i in range(len(emotion)):
+        the_emotion = emotion[i]
+        valence = corresponding_root_to_ratings_dict[the_emotion][0]
+        arousal = corresponding_root_to_ratings_dict[the_emotion][1]
+        intensity_1 = corresponding_root_to_ratings_dict[the_emotion][2]
+        intensity_2 = (np.abs(valence)/4) * (arousal*10)
+        intensity_3 = arousal * np.sqrt(np.abs(valence/4))   #hmmm, this isn't bad. good for now.
+        if corresponding_root_to_ratings_dict[the_emotion][0] > 0:
+            barlist[i].set_color((0.0, 0.85, 0.0))
+            barlist[i].set_alpha(intensity_3 / .7)
+            print intensity_3
+        else:
+            barlist[i].set_color((0.99, 0.0, 0.0))
+            barlist[i].set_alpha(intensity_3 / .7)
+            print intensity_3
+    #above, i like using arousal. might not be as good for
+    #pos words in the opposite graph, though?
+
+    #cutomize ticks
+    ticks = plt.yticks(pos + .5, emotion, fontsize=18)
+    xt = plt.xticks()[0]
+    plt.xticks(xt, [' '] * len(xt))
+    #minimize chartjunk
+    remove_border(left=False, bottom=False)
+    plt.grid(axis = 'x', color ='white', linestyle='-')
+    #set plot limits
+    plt.ylim(pos.max() + 1, pos.min() - 1)
+    plt.xlim(0, 4)
+    plt.tight_layout()  #this keeps words from getting cut off
+    plt.savefig('static_test/corpus1_to_corpus2.png')  #will need to change this so saves to static folder
 
 
-emotion = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
-ratio = [round(freq[1], 2) for freq in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
-intensity = [.2, .7, .7, .9, .1, .8, .7, .6, .1, .5, 
-             .4, .1, .6, .9, .4, .7, .9, .8, .7, .6]
+plot_ratios_corpus1_to_corpus2('Dreams', 'Real Life', sorted_emotion_corpus1_to_corpus2_ratios, corresponding_root_to_ratings_dict)
 
-grad = pd.DataFrame({'ratio' : ratio, 'emotion': emotion, 'intensity': intensity})
-plt.figure(figsize=(3, 8))
-#change = grad.change[grad.change > 0]  #in future step, just create one long list of ratios and select the top 20 here (and bottom 20 when do other/second graph)
-#city = grad.city[grad.change > 0]
-#intensity = grad.intensity[grad.change > 0]
-#ratio = grad.ratio
-#emotion = grad.emotion
-#intensity = grad.intensity
-
-pos = np.arange(len(emotion))
-plt.title('1995-2005 Change in HS graduation rate')
-barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
-# the values for bars or lines or whatever is plotted. and these values are now put 
-# into barlist object so i can use them below, e.g., loop through them and give the 
-# bars some new attributes
-
-#add the numbers to the side of each bar
-for p, e, r in zip(pos, emotion, ratio):
-    plt.annotate(str(r), xy=(r + .25, p + .5), va='center')
-
-#shade the bars based on intensity. it's looping through these values for the bars
-# and redrawsor re-does the bar with the new attribute
-for i in range(len(emotion)):
-    the_emotion = emotion[i]
-    if corresponding_root_to_ratings_dict[the_emotion][0] > 0:    
-        barlist[i].set_color((0.0, 0.9, 0.0))
-        barlist[i].set_alpha(corresponding_root_to_ratings_dict[the_emotion][2] / 3)
-    else:    
-        barlist[i].set_color((0.99, 0.0, 0.0))
-        barlist[i].set_alpha(np.abs(corresponding_root_to_ratings_dict[the_emotion][2]) / 3)
-plt.savefig('static_test/corpus1_to_corpus2_ALT.png')
-
-#cutomize ticks
-ticks = plt.yticks(pos + .5, emotion)
-xt = plt.xticks()[0]
-plt.xticks(xt, [' '] * len(xt))
-#minimize chartjunk
-remove_border(left=False, bottom=False)
-plt.grid(axis = 'x', color ='white', linestyle='-')
-#set plot limits
-plt.ylim(pos.max() + 1, pos.min() - 1)
-plt.xlim(0, 3.5)
 ############################################################
-
-
-intensity_list = [ratings[2] for ratings in corresponding_root_to_ratings_dict.values()]
-np.nanmean(intensity_list)
-np.nanmin(intensity_list)
-np.nanmax(intensity_list)
-
-arousal_list = [ratings[1] for ratings in corresponding_root_to_ratings_dict.values()]
-np.nanmean(arousal_list)
-np.nanmin(arousal_list)
-np.nanmax(arousal_list)
-
-
-
-
-
+#intensity_list = [ratings[2] for ratings in corresponding_root_to_ratings_dict.values()]
+#np.nanmean(intensity_list)
+#np.nanmin(intensity_list)
+#np.nanmax(intensity_list)
+#
+#arousal_list = [ratings[1] for ratings in corresponding_root_to_ratings_dict.values()]
+#np.nanmean(arousal_list)
+#np.nanmin(arousal_list)
+#np.nanmax(arousal_list)
+#
+#valence_list = [ratings[0] for ratings in corresponding_root_to_ratings_dict.values()]
+#np.nanmean(valence_list)
+#np.nanmin(valence_list)
+#np.nanmax(valence_list)
+#
 
 
 #plot  -  TURN INTO FUNCTION:
-def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus2_to_corpus1_ratios):
-    X = [word[0] for word in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
-    Y = [freq[1] for freq in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
-    fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
-    sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
-    sns.despine(left=True)
-    plt.title('Emotion-words Most Representative of ' + corpus2_name, fontsize=17)
-    plt.xticks(rotation=75)
-    plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
-    plt.ylim(1, 3.05)
-    plt.ylabel('Frequency in {} relative to {}'.format(corpus2_name, corpus1_name), fontsize=15)
-    plt.tight_layout()
-    plt.savefig('static_test/corpus2_to_corpus1.png')
+#def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus2_to_corpus1_ratios):
+#    X = [word[0] for word in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
+#    Y = [freq[1] for freq in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
+#    fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
+#    sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
+#    sns.despine(left=True)
+#    plt.title('Emotion-words Most Representative of ' + corpus2_name, fontsize=17)
+#    plt.xticks(rotation=75)
+#    plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
+#    plt.ylim(1, 3.05)
+#    plt.ylabel('Frequency in {} relative to {}'.format(corpus2_name, corpus1_name), fontsize=15)
+#    plt.tight_layout()
+#    plt.savefig('static_test/corpus2_to_corpus1.png')
+
+
+#def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus2_to_corpus1_ratios, corresponding_root_to_ratings_dict):
+#    #set some graph parameters:
+#    rcParams['figure.figsize'] = (10, 6)
+#    rcParams['figure.dpi'] = 150
+#    #rcParams['axes.color_cycle'] = dark2_colors
+#    rcParams['lines.linewidth'] = 2
+#    rcParams['axes.facecolor'] = 'white'  #this is the background color of the grid area
+#    rcParams['font.size'] = 14
+#    rcParams['patch.edgecolor'] = 'white'
+#    #rcParams['patch.facecolor'] = dark2_colors[0]
+#    rcParams['font.family'] = 'StixGeneral'
+#
+#    #a function that gets called later in this function
+#    def remove_border(axes=None, top=False, right=False, left=True, bottom=True):
+#        """
+#        Minimize chartjunk by stripping out unnecesasry plot borders and axis ticks
+#        The top/right/left/bottom keywords toggle whether the corresponding plot border is drawn
+#        """
+#        ax = axes or plt.gca()
+#        ax.spines['top'].set_visible(top)
+#        ax.spines['right'].set_visible(right)
+#        ax.spines['left'].set_visible(left)
+#        ax.spines['bottom'].set_visible(bottom)
+#        #turn off all ticks
+#        ax.yaxis.set_ticks_position('none')
+#        ax.xaxis.set_ticks_position('none')
+#        #now re-enable visibles
+#        if top:
+#            ax.xaxis.tick_top()
+#        if bottom:
+#            ax.xaxis.tick_bottom()
+#        if left:
+#            ax.yaxis.tick_left()
+#        if right:
+#            ax.yaxis.tick_right()
+#
+#
+#    emotion = [word[0] for word in sorted_emotion_corpus2_to_corpus1_ratios[:20]]
+#    ratio = [round(freq[1], 2) for freq in sorted_emotion_corpus2_to_corpus1_ratios[:20]]
+#    #intensity = [.2, .7, .7, .9, .1, .8, .7, .6, .1, .5, 
+#    #             .4, .1, .6, .9, .4, .7, .9, .8, .7, .6]
+#
+#    grad = pd.DataFrame({'ratio' : ratio, 'emotion': emotion, 'intensity': intensity})
+#    plt.figure(figsize=(5, 8))
+#    #change = grad.change[grad.change > 0]  #in future step, just create one long list of ratios and select the top 20 here (and bottom 20 when do other/second graph)
+#    #city = grad.city[grad.change > 0]
+#    #intensity = grad.intensity[grad.change > 0]
+#    #ratio = grad.ratio
+#    #emotion = grad.emotion
+#    #intensity = grad.intensity
+#
+#    pos = np.arange(len(emotion))
+#    plt.title(corpus2_name + ' / ' + corpus1_name, horizontalalignment='center')
+#    barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
+#    # the values for bars or lines or whatever is plotted. and these values are now put 
+#    # into barlist object so i can use them below, e.g., loop through them and give the 
+#    # bars some new attributes
+#
+#    #add the numbers to the side of each bar
+#    for p, e, r in zip(pos, emotion, ratio):
+#        plt.annotate(str(r), xy=(r + .25, p + .5), va='center')
+#
+#    #shade the bars based on intensity. it's looping through these values for the bars
+#    # and redrawsor re-does the bar with the new attribute
+#    for i in range(len(emotion)):
+#        the_emotion = emotion[i]
+#        valence = corresponding_root_to_ratings_dict[the_emotion][0]
+#        arousal = corresponding_root_to_ratings_dict[the_emotion][1]
+#        intensity_1 = corresponding_root_to_ratings_dict[the_emotion][2]
+#        intensity_2 = (np.abs(valence)/4) * (arousal*10)
+#        intensity_3 = arousal * np.sqrt(np.abs(valence/4))   #hmmm, this isn't bad. good for now.
+#        if corresponding_root_to_ratings_dict[the_emotion][0] > 0:    
+#            barlist[i].set_color((0.0, 0.85, 0.0))
+#            barlist[i].set_alpha(intensity_3 / .7)
+#            print intensity_3
+#        else:    
+#            barlist[i].set_color((0.99, 0.0, 0.0))
+#            barlist[i].set_alpha(intensity_3 / .7)
+#            print intensity_3
+#
+#    #above, i like using arousal. might not be as good for
+#    #pos words in the opposite graph, though? 
+#
+#    #cutomize ticks
+#    ticks = plt.yticks(pos + .5, emotion)
+#    xt = plt.xticks()[0]
+#    plt.xticks(xt, [' '] * len(xt))
+#    #minimize chartjunk
+#    remove_border(left=False, bottom=False)
+#    plt.grid(axis = 'x', color ='white', linestyle='-')
+#    #set plot limits
+#    plt.ylim(pos.max() + 1, pos.min() - 1)
+#    plt.xlim(0, 3.5)
+#    
+#    plt.tight_layout()  #this keeps words from getting cut off
+#    plt.savefig('static_test/corpus2_to_corpus1_ALT.png')  #will need to change this so saves to static folder
+
+
+def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus2_to_corpus1_ratios, corresponding_root_to_ratings_dict):
+    #set some graph parameters:
+    rcParams['figure.figsize'] = (10, 6)
+    rcParams['figure.dpi'] = 150
+    #rcParams['axes.color_cycle'] = dark2_colors
+    rcParams['lines.linewidth'] = 2
+    rcParams['axes.facecolor'] = 'white'  #this is the background color of the grid area
+    rcParams['font.size'] = 14
+    rcParams['patch.edgecolor'] = 'white'
+    #rcParams['patch.facecolor'] = dark2_colors[0]
+    rcParams['font.family'] = 'StixGeneral'
+
+    #a function that gets called later in this function
+    def remove_border(axes=None, top=False, right=False, left=True, bottom=True):
+        """
+        Minimize chartjunk by stripping out unnecesasry plot borders and axis ticks
+        The top/right/left/bottom keywords toggle whether the corresponding plot border is drawn
+        """
+        ax = axes or plt.gca()
+        ax.spines['top'].set_visible(top)
+        ax.spines['right'].set_visible(right)
+        ax.spines['left'].set_visible(left)
+        ax.spines['bottom'].set_visible(bottom)
+        #turn off all ticks
+        ax.yaxis.set_ticks_position('none')
+        ax.xaxis.set_ticks_position('none')
+        #now re-enable visibles
+        if top:
+            ax.xaxis.tick_top()
+        if bottom:
+            ax.xaxis.tick_bottom()
+        if left:
+            ax.yaxis.tick_left()
+        if right:
+            ax.yaxis.tick_right()
+
+    emotion = [word[0] for word in sorted_emotion_corpus2_to_corpus1_ratios[:20]]
+    ratio = [round(freq[1], 2) for freq in sorted_emotion_corpus2_to_corpus1_ratios[:20]]
+    plt.figure(figsize=(5, 8))
+    pos = np.arange(len(emotion))
+    plt.title(corpus2_name + ' / ' + corpus1_name, horizontalalignment='center')
+    barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
+    # the values for bars or lines or whatever is plotted. and these values are now put
+    # into barlist object so i can use them below, e.g., loop through them and give the
+    # bars some new attributes
+
+    #add the numbers to the side of each bar
+    for p, e, r in zip(pos, emotion, ratio):
+        plt.annotate(str(r), xy=(r + .25, p + .5), va='center')
+
+    #shade the bars based on intensity. it's looping through these values for the bars
+    # and redrawsor re-does the bar with the new attribute
+    for i in range(len(emotion)):
+        the_emotion = emotion[i]
+        valence = corresponding_root_to_ratings_dict[the_emotion][0]
+        arousal = corresponding_root_to_ratings_dict[the_emotion][1]
+        intensity_1 = corresponding_root_to_ratings_dict[the_emotion][2]
+        intensity_2 = (np.abs(valence)/4) * (arousal*10)
+        intensity_3 = arousal * np.sqrt(np.abs(valence/4))   #hmmm, this isn't bad. good for now.
+        if corresponding_root_to_ratings_dict[the_emotion][0] > 0:
+            barlist[i].set_color((0.0, 0.85, 0.0))
+            barlist[i].set_alpha(intensity_3 / .7)
+            print intensity_3
+        else:
+            barlist[i].set_color((0.99, 0.0, 0.0))
+            barlist[i].set_alpha(intensity_3 / .7)
+            print intensity_3
+    #above, i like using arousal. might not be as good for
+    #pos words in the opposite graph, though?
+
+    #cutomize ticks
+    ticks = plt.yticks(pos + .5, emotion, fontsize=18)
+    xt = plt.xticks()[0]
+    plt.xticks(xt, [' '] * len(xt))
+    #minimize chartjunk
+    remove_border(left=False, bottom=False)
+    plt.grid(axis = 'x', color ='white', linestyle='-')
+    #set plot limits
+    plt.ylim(pos.max() + 1, pos.min() - 1)
+    plt.xlim(0, 4)
+    plt.tight_layout()  #this keeps words from getting cut off
+    plt.savefig('static_test/corpus2_to_corpus1.png')  #will need to change this so saves to static folder
+
+
+
+#plot_ratios_corpus2_to_corpus1('Dreams', 'Real Life', sorted_emotion_corpus2_to_corpus1_ratios, corresponding_root_to_ratings_dict)
 
 
 #do for ea corpus:
@@ -365,8 +549,8 @@ def corpus_to_alphabetical_emotion_counts(corpus, emotion_to_root_dict):
 def plot_alphabetical_lists(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2, corpus1_name, corpus2_name):
     corpus1_to_corpus2_ratios = get_emotion_corpus1_to_corpus2_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2)
     corpus2_to_corpus1_ratios = get_emotion_corpus2_to_corpus1_ratios(alphabetical_emotion_counts_corpus1, alphabetical_emotion_counts_corpus2)
-    plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, corpus1_to_corpus2_ratios)
-    plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, corpus2_to_corpus1_ratios)
+    plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, corpus1_to_corpus2_ratios, corresponding_root_to_ratings_dict)
+    plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, corpus2_to_corpus1_ratios, corresponding_root_to_ratings_dict)
 
 
 
@@ -406,7 +590,7 @@ def corpuses_to_plot(corpus1, corpus2, corpus1_name, corpus2_name, emotion_to_ro
 #from matplotlib import rcParams
 #rcParams.update({'figure.autolayout': True})
 
-corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', clore_and_storm_Mar19_dict)
+#corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', clore_and_storm_Mar19_dict)
 
 
 #to get pickled dicts:
@@ -425,6 +609,193 @@ root_to_variations_dict['crying']
 
 
 corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', root_to_variations_dict)
+
+
+##############################################################################
+# this section: work on getting words assoc with emos
+# and sentences with emos in them
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import TreebankWordTokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from scipy.sparse import coo_matrix
+
+# plan:
+# within each corpus, divide up sentences for ea emo word
+# within ea corpus, make dict that has each emo word as key and all sentences
+#     from that corpus w the word as values. 
+# treat each set of values/sentences as a doc. and tf-idf vectorize
+#     to see how tf-idf scores for each word differ by emotion and corpus
+# then can list the top tf-idf words for ea emotion within ea corpus
+# if do it this way, doing it twice, once for ea corpus
+
+# play around w only looking at tf-idfs for nouns. and verbs.
+# could try presenting the highest and lowest ratios between corpora
+
+# step 1:
+# take corpus1. merge into one string doc. then sentence tokenize.
+# then take root_to_variations_dict and loop through each set of variations 
+# to see if any of them are in ea sent.
+# if so, put sentence in new dict as a value for that root emo key.
+
+
+len(dream_corpus_clean_2)
+
+# loop through emo_to_variations_dict and loop through dreams in corpus so
+# doing ea dream individually. because if change it later so that taking 
+# two adjacent sentences too, then would need to do this part by dream
+# Q: do i want to see what words are uniquely associated with a given 
+# emotion across the two corpora? or see what words are uniquely assoc
+# with each emotion uniquely for that corpora? I think that second one is 
+# more interesting for the dream database. 
+
+# this code is super slow. use code below. does same thing.
+#tokenizer = TreebankWordTokenizer()
+#root_to_sentences_dream_dict = defaultdict(list)
+#for root in root_to_variations_dict:
+#    for dream in dream_corpus_clean_2[:5]:
+#        sentences_in_dream = sent_tokenize(dream)
+#        for sentence in sentences_in_dream:
+#            words_in_sent = tokenizer.tokenize(sentence)
+#            if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
+#                root_to_sentences_dream_dict[root].append(sentence)
+
+# works well:
+tokenizer = TreebankWordTokenizer()
+root_to_sentences_dream_dict = defaultdict(list)
+for dream in dream_corpus_clean_2[:2]:
+    sentences_in_dream = sent_tokenize(dream)
+    for sentence in sentences_in_dream:
+        words_in_sent = tokenizer.tokenize(sentence)
+        for root in root_to_variations_dict:
+            if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
+                root_to_sentences_dream_dict[root].append(sentence)
+
+len(root_to_sentences_dream_dict)
+                
+
+# next step: combine sentences in ea dict entry so they're one string
+# and so have list of strings that represent ea emo
+# how to keep track of which emo goes with which list item?
+# put keys/roots in a list too that are in same order?
+
+
+# create list of emotion docs, i.e., each string is comprised of all the 
+# sentences that contain a particular emotion word:
+words_around_emo_docs = []
+emo_list = []
+for root in root_to_sentences_dream_dict:
+    words_around_emo_docs.append(' '.join([sentence for sentence in root_to_sentences_dream_dict[root]]))
+    emo_list.append(root)
+    
+len(words_around_emo_docs)
+root_to_sentences_dream_dict['crazy']
+root_to_sentences_dream_dict.keys()[0]
+
+
+vectorizer = TfidfVectorizer(stop_words="english")  # add all emo words in dict as stop words
+words_around_emo_vectors = vectorizer.fit_transform(words_around_emo_docs)  #this is a list of strings.
+#vectorizer.get_feature_names()[5]  # gives names of words 
+
+
+terms = np.array(vectorizer.get_feature_names())
+terms_for_first_doc = zip(terms, words_around_emo_vectors.toarray()[0])  #the 0 is giving back terms for first doc
+sorted_terms_for_first_doc = sorted(terms_for_first_doc, key=lambda tup: tup[1], reverse=True)  #this sorts by the 2nd item in the tuple, the tf-idf score
+sorted_terms_for_first_doc[:10]
+# ** this seemed to work. compare these terms_for_first_doc with another method
+# yeah, checked against old method. this seems to work. use it
+
+
+# turn above into a f:
+root_to_tfidf_terms = defaultdict(list)
+terms = np.array(vectorizer.get_feature_names())
+for i in range(len(words_around_emo_docs)):
+    terms_for_first_doc = zip(terms, words_around_emo_vectors.toarray()[i])  #the 0 is giving back terms for first doc
+    sorted_terms_for_first_doc = sorted(terms_for_first_doc, key=lambda tup: tup[1], reverse=True)  #this sorts by the 2nd item in the tuple, the tf-idf score
+    root = root_to_sentences_dream_dict.keys()[i]
+    root_to_tfidf_terms[root].append(sorted_terms_for_first_doc)
+
+# next steps:
+# do for all of corpus
+# consider doing tf-idf for both corpuses at same time so can distinguish
+# between coropuses. and more is probaby better.
+# include emo variations as stop words
+# use just nouns and/or just verbs
+# somehow get rid of non-words as early as possible in process, 
+# so don't get used for tf-idf
+# need to be able to go back into root_to_sentences_dict and grab a couple
+# sentences with a particular word. i guess, get top tf-idf word for a particular
+# emotion and then go to the sentences under that key in dict and say, 
+# give me all sentences wiht this word and print one that's a reasonable
+# lenght? or just print the first one. or first two.
+
+
+
+
+
+
+
+
+
+
+
+
+# see if this does the same as above -- finding top tf-idf words for a doc:
+#c_matrix = coo_matrix(emotion_vectors)
+#
+#def print_representative_words(number_docs, number_words, c_matrix, vectorizer):
+#    for i in range(number_docs):
+#        #iterate through sparse/coo matrix to get tuples:
+#        variable_list = [(index, tfidf) for row, index, tfidf in zip(c_matrix.row, c_matrix.col, c_matrix.data) if row == i]
+#        #sort tuples based on tf-idf score:
+#        variables_sorted_by_tfidf = sorted(variable_list, key=lambda tup: tup[1], reverse=True)
+#        word_list = []
+#        for x in range(number_words):
+#            max_index_in_cluster = variables_sorted_by_tfidf[x][0]
+#            word = vectorizer.get_feature_names()[max_index_in_cluster]     
+#            word_list.append(word)
+#        print 'Words representative of document {}: '.format(i+1), word_list
+#        print
+#
+#print_representative_words(1, 5, c_matrix, vectorizer)
+
+
+
+# draw from unsupervised learning 1 ipy nb to get the most important
+# tf-idf words for each emo doc
+c_matrix = coo_matrix(emotion_vectors)
+row_1 = c_matrix.getrow(0)
+sorted_row_1 = np.argsort(row_1)
+sorted_row_1 = np.sort(row_1)
+sorted_row_1 = sorted(row_1)
+
+#gives max of a row
+row_maximum = max(c_matrix.getrow(18).data)
+
+# the row col and data give the row#, col# and data point for each data point in sparse matrix
+count = 0
+for i, j, v in zip(c_matrix.row, c_matrix.col, c_matrix.data):  
+    print i, j, v
+    count += 1
+    if count == 10:
+        break
+
+long_string = ' '.join([dream for dream in dream_corpus_clean_2[:3]]) 
+# this is a prob if later want to take adjoining sentences because may be 
+# taking them from adjoining dreams
+
+text = [sentence for sentence in dream_corpus_clean_2[:3]]
+
+text = "Hello. How are you, dear sir? Are you well, Mr. Sirer? Here: drink this! It will make you feel better."
+
+sentences = sent_tokenize(text[0])  #needs to take one long string doc
+sentences
+
+
+
+
+
+
+
 
 
 

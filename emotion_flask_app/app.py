@@ -43,13 +43,17 @@ def analysis():
     # corpus2_list = list(corpus2)
 
 
-    # Retrieve emotion-words dict:
-    with open('clore_and_storm_words_Mar19_dict.pkl', 'r') as picklefile:
-        clore_and_storm_Mar19_dict = pickle.load(picklefile)
+    # Retrieve emotion-words to variations dict:
+    with open('root_to_variations_dict.pkl', 'r') as picklefile:
+        root_to_variations_dict = pickle.load(picklefile)
+    # Retrieve emotion-words to ratings dict:
+    with open('corresponding_root_to_ratings_dict.pkl', 'r') as picklefile:
+        corresponding_root_to_ratings_dict = pickle.load(picklefile)
+
 
     #takes data from two corpora and saves two graphs to static folder
     #later: allow user to input name of each corpus and replace 'Corpus 1' and 'Corpus 2' w those names
-    ee.corpuses_to_plot(corpus1_list, corpus2_list, 'Corpus 1', 'Corpus 2', clore_and_storm_Mar19_dict)
+    ee.corpuses_to_plot(corpus1_list, corpus2_list, 'Corpus 1', 'Corpus 2', root_to_variations_dict, corresponding_root_to_ratings_dict)
 
     return flask.render_template("results.html",  #render the results.html page, which will get the graphs
                                  corpus_one = len(corpus1_list),  #will take the text fro the corpus if need it in results.html

@@ -1009,12 +1009,13 @@ def convert_csv_word_ratings_to_dict(csv_file):
         next(reader, None)  # skip the headers
         for row in reader:  
             valence = float(row[2]) - 5.0
-            arousal = float(row[5])
-            intensity = valence * arousal
+            arousal = float(row[5]) / 9.0  #thinking this should be a fraction since valence is no longer on 9-pt scale
+            intensity = valence * arousal  #and multiply valence by fraction from 0 to 1
             word_to_ratings_dict[row[1]] = [valence, arousal, intensity]
     return word_to_ratings_dict
 
 root_to_ratings_dict = convert_csv_word_ratings_to_dict('Ratings_Warriner_et_al.csv')
+root_to_ratings_dict['ecstatic']
 
 # need to create more keys for words that are in root_to_variations dict but
 # not in root_to_ratings dict. so:
@@ -1036,6 +1037,15 @@ with open('root_to_variations_dict.pkl', 'w') as picklefile:
 
 with open('root_to_ratings_dict.pkl', 'w') as picklefile:
     pickle.dump(root_to_ratings_dict, picklefile)
+
+
+# write these dicts again to the emotion_flask_app folder so can be used by app
+with open('emotion_flask_app/root_to_variations_dict.pkl', 'w') as picklefile:
+    pickle.dump(root_to_variations_dict, picklefile)
+
+with open('emotion_flask_app/root_to_ratings_dict.pkl', 'w') as picklefile:
+    pickle.dump(root_to_ratings_dict, picklefile)
+
 
 
 # ok, problem is that not in this dictionary!? becasue not all words in the
