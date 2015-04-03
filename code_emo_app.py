@@ -72,7 +72,8 @@ def corpus_lowercase(corpus):
     return corpus_lower
 
 
-#corret spelling in reports
+#corret spelling in reports  - this was ver slow so cut out of final function
+#faster way to get to work? incorp in previous f so don't have to textblob it twice?
 def corpus_spelling_correct(corpus):
     corpus_spell_correct =[]
     for report in corpus:
@@ -618,6 +619,7 @@ from nltk.tokenize import sent_tokenize
 from nltk.tokenize import TreebankWordTokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import coo_matrix
+from sklearn.feature_extraction import text
 
 # plan:
 # within each corpus, divide up sentences for ea emo word
@@ -659,40 +661,53 @@ len(dream_corpus_clean_2)
 #            if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
 #                root_to_sentences_dream_dict[root].append(sentence)
 
-# works well:
-tokenizer = TreebankWordTokenizer()
-root_to_sentences_dream_dict = defaultdict(list)
-for dream in dream_corpus_clean_2[:2]:
-    sentences_in_dream = sent_tokenize(dream)
-    for sentence in sentences_in_dream:
-        words_in_sent = tokenizer.tokenize(sentence)
-        for root in root_to_variations_dict:
-            if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
-                root_to_sentences_dream_dict[root].append(sentence)
+# takes one corpus and returns a dict of root emos to sentences containing that emo:
+def corpus_to_root_to_sentences(corpus_clean_2, root_to_variations_dict):
+    tokenizer = TreebankWordTokenizer()
+    root_to_sentences_dict = defaultdict(list)
+    for dream in corpus_clean_2[:2]:
+        sentences_in_dream = sent_tokenize(dream)
+        for sentence in sentences_in_dream:
+            words_in_sent = tokenizer.tokenize(sentence)
+            for root in root_to_variations_dict:
+                if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
+                    root_to_sentences_dict[root].append(sentence)
+    return root_to_sentences_dict
 
+root_to_sentences_dream_dict = corpus_to_root_to_sentences(dream_corpus_clean_2, root_to_variations_dict)
 len(root_to_sentences_dream_dict)
                 
 
-# next step: combine sentences in ea dict entry so they're one string
-# and so have list of strings that represent ea emo
-# how to keep track of which emo goes with which list item?
-# put keys/roots in a list too that are in same order?
+# create list of emotion docs, i.e., where each string is comprised of all the 
+# sentences that contain a particular emotion word. neeed keep track of which 
+# emo goes with which list item too. put keys/roots in a list too, in same order
+def create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict):
+    combined_sent_around_emo_docs = []
+    emo_list = []
+    for root in root_to_sentences_dict:
+        combined_sent_around_emo_docs.append(' '.join([sentence for sentence in root_to_sentences_dict[root]]))
+        emo_list.append(root)
+    return combined_sent_around_emo_docs, emo_list
 
+combined_sent_around_emo_docs, emo_list = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dream_dict)
 
-# create list of emotion docs, i.e., each string is comprised of all the 
-# sentences that contain a particular emotion word:
-words_around_emo_docs = []
-emo_list = []
-for root in root_to_sentences_dream_dict:
-    words_around_emo_docs.append(' '.join([sentence for sentence in root_to_sentences_dream_dict[root]]))
-    emo_list.append(root)
-    
-len(words_around_emo_docs)
+len(emo_list)
+len(combined_sent_around_emo_docs)
 root_to_sentences_dream_dict['crazy']
 root_to_sentences_dream_dict.keys()[0]
 
 
-vectorizer = TfidfVectorizer(stop_words="english")  # add all emo words in dict as stop words
+# create list of all emo variations (to use in stopwords):
+all_emo_variations = []
+for variation_set in root_to_variations_dict.values():
+    all_emo_variations += variation_set
+
+
+# add all emotion wors to stoplist
+my_words = set(all_emo_variations)
+my_stop_words = text.ENGLISH_STOP_WORDS.union(my_words)
+#vectorizer = TfidfVectorizer(stop_words="english")  #orig text just using english stopwords
+vectorizer = TfidfVectorizer(stop_words=set(my_stop_words))  # add all emo words in dict as stop words
 words_around_emo_vectors = vectorizer.fit_transform(words_around_emo_docs)  #this is a list of strings.
 #vectorizer.get_feature_names()[5]  # gives names of words 
 
@@ -727,7 +742,14 @@ for i in range(len(words_around_emo_docs)):
 # emotion and then go to the sentences under that key in dict and say, 
 # give me all sentences wiht this word and print one that's a reasonable
 # lenght? or just print the first one. or first two.
-
+# ((and then always can try just counting the words/nouns/verbs that appear 
+# most frequently around the emo word. and perhaps doing ratio. but skip 
+# this for now, now that i have the tf-idf going.))
+# do i also need to think about whether to group certain nouns or verbs
+# together? e.g., do something like did with emo words -- lump variations
+# of same words together? could do this with irmak's wordnet approach to 
+# sort of get synonyms. but this seems more complicated? wait on this.
+# first play around with more basic stuff to see how it looks.
 
 
 
