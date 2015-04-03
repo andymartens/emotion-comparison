@@ -694,11 +694,11 @@ len(root_to_sentences_dream_dict)
 # emo goes with which list item too. put keys/roots in a list too, in same order
 def create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict):
     combined_sent_around_emo_docs = []
-    emo_list = []
+    corresponding_emo_list = []
     for root in root_to_sentences_dict:
         combined_sent_around_emo_docs.append(' '.join([sentence for sentence in root_to_sentences_dict[root]]))
-        emo_list.append(root)
-    return combined_sent_around_emo_docs, emo_list
+        corresponding_emo_list.append(root)
+    return combined_sent_around_emo_docs, corresponding_emo_list
 
 combined_sent_around_emo_docs, emo_list = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dream_dict)
 len(emo_list)
@@ -721,6 +721,33 @@ def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
     emo_list2_change = [emo + '2' for emo in emo_list2]
     emo_list12 = emo_list1_change + emo_list2_change
     return combined_sent_around_emo_docs12, emo_list12
+
+
+# build f here to keep only nouns, or verbs, in combined_sent_around_emo_docs
+# and can call it or not in the master f. this should take combined_sent_around_emo_docs
+# and return similar thing but just nouns or verbs inside
+def only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs):
+    only_NN_combined_sent_w_emo_docs =[]
+    for doc in combined_sent_around_emo_docs:
+        textblob_doc = TextBlob(doc)
+        only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'NN' or word_tag[1] == 'NNS' or word_tag[1] == 'NNP' or word_tag[1] == 'NNPS']) 
+        only_NN_combined_sent_w_emo_docs.append(only_part_of_speech)  
+    return only_NN_combined_sent_w_emo_docs
+
+only_NN_combined_sent_w_emo_docs = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+len(only_NN_combined_sent_w_emo_docs)
+
+
+def only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs):
+    only_VB_combined_sent_w_emo_docs =[]
+    for doc in combined_sent_around_emo_docs:
+        textblob_doc = TextBlob(doc)
+        only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'VB' or word_tag[1] == 'VBD' or word_tag[1] == 'VBG' or word_tag[1] == 'VBN' or word_tag[1] == 'VBP' or word_tag[1] == 'VBZ']) 
+        only_VB_combined_sent_w_emo_docs.append(only_part_of_speech)  
+    return only_VB_combined_sent_w_emo_docs
+
+only_VB_combined_sent_w_emo_docs = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+
 
 
 def tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs):
@@ -770,6 +797,11 @@ def master_corpus_to_emo_to_tfidf_term_dict(corpus, root_to_variations_dict):
     all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)   
     root_to_sentences_dict = corpus_to_root_to_sentences(corpus, root_to_variations_dict)
     combined_sent_around_emo_docs, emo_list = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict)
+
+    #if want to do just nouns or verbs, de-comment one of these below
+    #combined_sent_around_emo_docs = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+    #combined_sent_around_emo_docs = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+
     words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs)
     root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list)
     return root_to_tfidf_terms_dict
@@ -781,6 +813,11 @@ root_to_tfidf_terms_dict = master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_
 def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variations_dict):
     all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)       
     combined_sent_around_emo_docs12, emo_list12 = create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2)
+
+    #if want to do just nouns or verbs, de-comment one of these below
+    #combined_sent_around_emo_docs12 = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
+    #combined_sent_around_emo_docs12 = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
+
     words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
     root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs12, words_around_emo_vectors, emo_list12)
     return root_to_tfidf_terms_dict
@@ -788,8 +825,13 @@ def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variat
 root_to_tfidf_terms_dict_combo_corpora = alt_master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, waking_corpus_clean_2, root_to_variations_dict)
 
 
+# now can explore this dict and try nn ony and vb only, and see what else I can do
+# to make this interesting. ratio again? to compare ea corpus? 
+# to compare two emos? -- could do that too.
 
-# alt so that vectorizing on both corpora at same time
+
+
+
 
 
 
