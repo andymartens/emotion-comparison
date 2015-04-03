@@ -642,6 +642,17 @@ from sklearn.feature_extraction import text
 
 len(dream_corpus_clean_2)
 
+# create list of all emo variations (to use in stopwords):
+def create_all_emo_variations_list(root_to_variations_dict):
+    all_emo_variations = []
+    for variation_set in root_to_variations_dict.values():
+        all_emo_variations += variation_set
+    return all_emo_variations
+
+all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)
+len(set(all_emo_variations))
+
+
 # loop through emo_to_variations_dict and loop through dreams in corpus so
 # doing ea dream individually. because if change it later so that taking 
 # two adjacent sentences too, then would need to do this part by dream
@@ -662,10 +673,10 @@ len(dream_corpus_clean_2)
 #                root_to_sentences_dream_dict[root].append(sentence)
 
 # takes one corpus and returns a dict of root emos to sentences containing that emo:
-def corpus_to_root_to_sentences(corpus_clean_2, root_to_variations_dict):
+def corpus_to_root_to_sentences(corpus_clean, root_to_variations_dict):
     tokenizer = TreebankWordTokenizer()
     root_to_sentences_dict = defaultdict(list)
-    for dream in corpus_clean_2[:2]:
+    for dream in corpus_clean[:2]:
         sentences_in_dream = sent_tokenize(dream)
         for sentence in sentences_in_dream:
             words_in_sent = tokenizer.tokenize(sentence)
@@ -690,44 +701,105 @@ def create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict):
     return combined_sent_around_emo_docs, emo_list
 
 combined_sent_around_emo_docs, emo_list = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dream_dict)
-
 len(emo_list)
 len(combined_sent_around_emo_docs)
 root_to_sentences_dream_dict['crazy']
 root_to_sentences_dream_dict.keys()[0]
 
 
-# create list of all emo variations (to use in stopwords):
-all_emo_variations = []
-for variation_set in root_to_variations_dict.values():
-    all_emo_variations += variation_set
+# addition to can tfidf-vectorize both corp as same time.
+# returns list of docs (w each doc comprised of sentences w an emo word in a corpus)
+# and the emo list corresponding to those docs. but these lists have both info from
+# corpus 1 and corpus 2. 
+def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
+    root_to_sentences_dict_corp1 = corpus_to_root_to_sentences(corpus1, root_to_variations_dict)    
+    root_to_sentences_dict_corp2 = corpus_to_root_to_sentences(corpus2, root_to_variations_dict)    
+    combined_sent_around_emo_docs1, emo_list1 = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict_corp1)
+    combined_sent_around_emo_docs2, emo_list2 = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict_corp2)
+    combined_sent_around_emo_docs12 = combined_sent_around_emo_docs1 + combined_sent_around_emo_docs2
+    emo_list1_change = [emo + '1' for emo in emo_list1]
+    emo_list2_change = [emo + '2' for emo in emo_list2]
+    emo_list12 = emo_list1_change + emo_list2_change
+    return combined_sent_around_emo_docs12, emo_list12
 
 
-# add all emotion wors to stoplist
-my_words = set(all_emo_variations)
-my_stop_words = text.ENGLISH_STOP_WORDS.union(my_words)
-#vectorizer = TfidfVectorizer(stop_words="english")  #orig text just using english stopwords
-vectorizer = TfidfVectorizer(stop_words=set(my_stop_words))  # add all emo words in dict as stop words
-words_around_emo_vectors = vectorizer.fit_transform(words_around_emo_docs)  #this is a list of strings.
-#vectorizer.get_feature_names()[5]  # gives names of words 
+def tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs):
+    # add all emotion words to stoplist    
+    my_words = set(all_emo_variations)
+    my_stop_words = text.ENGLISH_STOP_WORDS.union(my_words)
+    #vectorizer = TfidfVectorizer(stop_words="english")  #orig text just using english stopwords
+    vectorizer = TfidfVectorizer(stop_words=set(my_stop_words))  # add all emo words in dict as stop words
+    words_around_emo_vectors = vectorizer.fit_transform(combined_sent_around_emo_docs)  #this is a list of strings.
+    #vectorizer.get_feature_names()[5]  # gives names of words 
+    return words_around_emo_vectors, vectorizer
+
+words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs)
 
 
-terms = np.array(vectorizer.get_feature_names())
-terms_for_first_doc = zip(terms, words_around_emo_vectors.toarray()[0])  #the 0 is giving back terms for first doc
-sorted_terms_for_first_doc = sorted(terms_for_first_doc, key=lambda tup: tup[1], reverse=True)  #this sorts by the 2nd item in the tuple, the tf-idf score
-sorted_terms_for_first_doc[:10]
+# get terms in firs doc sorted by tf-idf
+#terms = np.array(vectorizer.get_feature_names())
+#terms_for_first_doc = zip(terms, words_around_emo_vectors.toarray()[0])  #the 0 is giving back terms for first doc
+#sorted_terms_for_first_doc = sorted(terms_for_first_doc, key=lambda tup: tup[1], reverse=True)  #this sorts by the 2nd item in the tuple, the tf-idf score
+#sorted_terms_for_first_doc[:10]
 # ** this seemed to work. compare these terms_for_first_doc with another method
 # yeah, checked against old method. this seems to work. use it
 
 
-# turn above into a f:
-root_to_tfidf_terms = defaultdict(list)
-terms = np.array(vectorizer.get_feature_names())
-for i in range(len(words_around_emo_docs)):
-    terms_for_first_doc = zip(terms, words_around_emo_vectors.toarray()[i])  #the 0 is giving back terms for first doc
-    sorted_terms_for_first_doc = sorted(terms_for_first_doc, key=lambda tup: tup[1], reverse=True)  #this sorts by the 2nd item in the tuple, the tf-idf score
-    root = root_to_sentences_dream_dict.keys()[i]
-    root_to_tfidf_terms[root].append(sorted_terms_for_first_doc)
+# get (terms, tf-idf) tuples sorted by tf-idf and put into root emo to (term, tf-idf) dict
+def create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list):
+    root_to_tfidf_terms_dict = defaultdict(list)
+    terms = np.array(vectorizer.get_feature_names())
+    for i in range(len(combined_sent_around_emo_docs)):
+        # the i is giving back info for first doc. so think getting the toarray is giving tf-idfs assoc with each term       
+        terms_tfidf_for_doc = zip(terms, words_around_emo_vectors.toarray()[i])  
+        sorted_terms_for_doc = sorted(terms_tfidf_for_doc, key=lambda tup: tup[1], reverse=True)  #this sorts by the 2nd item in the tuple, the tf-idf score
+        root = emo_list[i]
+        root_to_tfidf_terms_dict[root].append(sorted_terms_for_doc)
+    return root_to_tfidf_terms_dict
+
+
+root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list)
+len(root_to_tfidf_terms_dict)
+
+
+
+# create master f to run all this code above. 
+#takes the corpus (e.g., of dreams) and returns a dict of 
+# emo keys to terms assoc w those emos and tf-idfs of those terms
+def master_corpus_to_emo_to_tfidf_term_dict(corpus, root_to_variations_dict):
+    all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)   
+    root_to_sentences_dict = corpus_to_root_to_sentences(corpus, root_to_variations_dict)
+    combined_sent_around_emo_docs, emo_list = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict)
+    words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs)
+    root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list)
+    return root_to_tfidf_terms_dict
+
+root_to_tfidf_terms_dict = master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, root_to_variations_dict)
+
+
+# gives tfidfs for each emo labeled as either belonging to corpus1 or corpus2
+def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variations_dict):
+    all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)       
+    combined_sent_around_emo_docs12, emo_list12 = create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2)
+    words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
+    root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs12, words_around_emo_vectors, emo_list12)
+    return root_to_tfidf_terms_dict
+
+root_to_tfidf_terms_dict_combo_corpora = alt_master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, waking_corpus_clean_2, root_to_variations_dict)
+
+
+
+# alt so that vectorizing on both corpora at same time
+
+
+
+# see how to tweak so can run it for both corpora at same time.
+# what if i combo both corpora in to 'corpus'? don't think that works? because...
+
+
+
+
+
 
 # next steps:
 # do for all of corpus
