@@ -620,6 +620,8 @@ from nltk.tokenize import TreebankWordTokenizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 from scipy.sparse import coo_matrix
 from sklearn.feature_extraction import text
+import enchant  
+
 
 # plan:
 # within each corpus, divide up sentences for ea emo word
@@ -672,13 +674,69 @@ len(set(all_emo_variations))
 #            if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
 #                root_to_sentences_dream_dict[root].append(sentence)
 
+
+
+# could change below function so taht it takes certain num of characters or
+# words around the emo word and puts that string in the dict instead of sentence
+# to do this:
+# change:  sentences_in_dream = sent_tokenize(dream)
+# to :  do a find in the dream -- search for a find the emo word i'm looking for
+# grab the 150 characters before and after. and put that into the dict instead 
+# of sentence. seems worth playing with this approach. try next.
+
+
+
+
+def corpus_to_root_to_sentences_alt(corpus_clean, root_to_variations_dict):
+    #tokenizer = TreebankWordTokenizer()
+    root_to_sentences_dict = defaultdict(list)
+    for doc in corpus_clean[:]:
+        for root in root_to_variations_dict:
+            intersection = set(root_to_variations_dict[root]) & set(TextBlob(doc).words)
+            if intersection:
+                emo_loc = doc.rfind(list(intersection)[0])
+                start_loc = emo_loc - 150
+                end_loc = emo_loc + 150
+                if start_loc < 0:
+                    start_loc = 0
+                if end_loc > len(doc):
+                    end_loc = len(doc)
+                emo_relevant_part_of_doc = doc[start_loc: end_loc]
+                root_to_sentences_dict[root].append(emo_relevant_part_of_doc)                   
+    return root_to_sentences_dict
+
+root_to_sentences_dream_dict = corpus_to_root_to_sentences_alt(corpus_clean, root_to_variations_dict)
+
+
+#len(corpus_clean[2])
+#corpus_clean = ['this is dream 1 and i feel good.', 'this is dream 2 and i feel amazing', 'this is dream 3 and i also feel amazing. really i do doooooooooooooooooooooooooooooooooooooooo Yessssssssssssssssssssssssssssssssssssssss ONeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee Doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz']
+
+#root_to_variations_dict['funny'] = ['fun', 'funny', 'funniness']
+#root = 'funny'
+#
+#intersection = set(animals) & set(TextBlob(a_string).words)
+#animals = ['cats', 'cat', 'dogs']
+#
+#emo_loc = a_string.rfind(list(intersection)[0])  #returns position of first letter of word ('f')
+#len(a_string)
+#start_loc = emo_loc - 150
+#end_loc = emo_loc + 150
+#if start_loc < 0:
+#    start_loc = 0
+#if end_loc > len(a_string):
+#    end_loc = len(a_string)
+#    
+#a_string[start_loc: end_loc]
+
+
+
 # takes one corpus and returns a dict of root emos to sentences containing that emo:
 def corpus_to_root_to_sentences(corpus_clean, root_to_variations_dict):
     tokenizer = TreebankWordTokenizer()
     root_to_sentences_dict = defaultdict(list)
-    for dream in corpus_clean[:2]:
-        sentences_in_dream = sent_tokenize(dream)
-        for sentence in sentences_in_dream:
+    for doc in corpus_clean[:]:
+        sentences_in_doc = sent_tokenize(doc)
+        for sentence in sentences_in_doc:
             words_in_sent = tokenizer.tokenize(sentence)
             for root in root_to_variations_dict:
                 if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
@@ -690,13 +748,22 @@ len(root_to_sentences_dream_dict)
                 
 
 # create list of emotion docs, i.e., where each string is comprised of all the 
-# sentences that contain a particular emotion word. neeed keep track of which 
-# emo goes with which list item too. put keys/roots in a list too, in same order
+# sentences that contain a particular emotion word. but made ea sentence a set of words, i.e., took out repeats
+# to keep track of which emo goes with which list item, put keys/roots in a list too, in same order
 def create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict):
     combined_sent_around_emo_docs = []
     corresponding_emo_list = []
     for root in root_to_sentences_dict:
-        combined_sent_around_emo_docs.append(' '.join([sentence for sentence in root_to_sentences_dict[root]]))
+        # turn ea sentence into a set of words, so words dont count twice for one document, e.g., for one dream
+        sentences = root_to_sentences_dict[root]
+        sentences_unique_words = []        
+        for sentence in sentences:
+            sentence_blob = TextBlob(sentence)
+            bag_of_words_unique_in_sentence = list(set(sentence_blob.words))
+            sentences_unique_words += bag_of_words_unique_in_sentence
+        sentences_unique_words_joined = ' '.join(sentences_unique_words)            
+        combined_sent_around_emo_docs.append(sentences_unique_words_joined)
+#        combined_sent_around_emo_docs.append(' '.join([sentence for sentence in root_to_sentences_dict[root]]))  #old syntax
         corresponding_emo_list.append(root)
     return combined_sent_around_emo_docs, corresponding_emo_list
 
@@ -723,14 +790,44 @@ def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
     return combined_sent_around_emo_docs12, emo_list12
 
 
+# what gets fed into vectorizer. want un-pluralized, only real words, and lowercase
+
+#def eliminate_nonwords(word_list):    
+#    d = enchant.Dict("en_US")
+#    real_words_list = []
+#    for word in word_list:
+#        if d.check(word):
+#            real_words_list.append(word)
+#    return real_words_list
+#
+#for word in textblob_doc.words:
+#    d = enchant.Dict("en_US")
+#    real_words_list = []
+#    if d.check(word):
+#        real_words_list.append(word)
+#
+#a_string = 'adding a first sentence. hello there i am Andy but also called andy and Dad And daddy and 10am once Upon a tmie. then i read books and found cats.'
+#textblob_doc = TextBlob(a_string)
+#d = enchant.Dict("en_US")
+## this cuts out proper names, though, e.g. andy. how to create option of keeping 
+## proper nouns while still taking out non-words? maybe if just selecting nouns
+## and verbs it won't include non-words (e.g., 10am)?
+#new_string = ' '.join([word for word in textblob_doc.words.lower().singularize() if d.check(word)])  
+#
+#only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'NN' or word_tag[1] == 'NNS' or word_tag[1] == 'NNP' or word_tag[1] == 'NNPS'])  
+
+
 # build f here to keep only nouns, or verbs, in combined_sent_around_emo_docs
 # and can call it or not in the master f. this should take combined_sent_around_emo_docs
 # and return similar thing but just nouns or verbs inside
 def only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs):
+    d = enchant.Dict("en_US")
     only_NN_combined_sent_w_emo_docs =[]
     for doc in combined_sent_around_emo_docs:
         textblob_doc = TextBlob(doc)
-        only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'NN' or word_tag[1] == 'NNS' or word_tag[1] == 'NNP' or word_tag[1] == 'NNPS']) 
+        doc_lc_sing_real = ' '.join([word for word in textblob_doc.words.lower().singularize() if d.check(word)])  # need to elim this d.check(word) part in order to get proper names in output
+        textblob_doc = TextBlob(doc_lc_sing_real)
+        only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'NN' or word_tag[1] == 'NNS'])  #consider adding NNP and NNPS for proper nouns. ie. may want people's names
         only_NN_combined_sent_w_emo_docs.append(only_part_of_speech)  
     return only_NN_combined_sent_w_emo_docs
 
@@ -739,22 +836,37 @@ len(only_NN_combined_sent_w_emo_docs)
 
 
 def only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs):
+    d = enchant.Dict("en_US")
     only_VB_combined_sent_w_emo_docs =[]
     for doc in combined_sent_around_emo_docs:
         textblob_doc = TextBlob(doc)
+        doc_lc_sing_real = ' '.join([word for word in textblob_doc.words.lower().singularize() if d.check(word)])  # need to elim this d.check(word) part in order to get proper names in output
+        textblob_doc = TextBlob(doc_lc_sing_real)
         only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'VB' or word_tag[1] == 'VBD' or word_tag[1] == 'VBG' or word_tag[1] == 'VBN' or word_tag[1] == 'VBP' or word_tag[1] == 'VBZ']) 
         only_VB_combined_sent_w_emo_docs.append(only_part_of_speech)  
     return only_VB_combined_sent_w_emo_docs
 
 only_VB_combined_sent_w_emo_docs = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
 
+# create third option here that gives back both nouns AND verbs
+def only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs):
+    d = enchant.Dict("en_US")
+    only_VB_NN_combined_sent_w_emo_docs =[]
+    for doc in combined_sent_around_emo_docs:
+        textblob_doc = TextBlob(doc)
+        doc_lc_sing_real = ' '.join([word for word in textblob_doc.words.lower().singularize() if d.check(word)])  # need to elim this d.check(word) part in order to get proper names in output
+        #doc_lc_sing_real = ' '.join([word for word in textblob_doc.words.lower().singularize()])  # need to elim this d.check(word) part in order to get proper names in output
+        textblob_doc = TextBlob(doc_lc_sing_real)
+        only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'VB' or word_tag[1] == 'VBD' or word_tag[1] == 'VBG' or word_tag[1] == 'VBN' or word_tag[1] == 'VBP' or word_tag[1] == 'VBZ' or word_tag[1] == 'NN' or word_tag[1] == 'NNS']) 
+        only_VB_NN_combined_sent_w_emo_docs.append(only_part_of_speech)  
+    return only_VB_NN_combined_sent_w_emo_docs
 
 
 def tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs):
     # add all emotion words to stoplist    
     my_words = set(all_emo_variations)
     my_stop_words = text.ENGLISH_STOP_WORDS.union(my_words)
-    #vectorizer = TfidfVectorizer(stop_words="english")  #orig text just using english stopwords
+    #vectorizer = TfidfVectorizer(stop_words="english")  #orig text just using "english" stopwords
     vectorizer = TfidfVectorizer(stop_words=set(my_stop_words))  # add all emo words in dict as stop words
     words_around_emo_vectors = vectorizer.fit_transform(combined_sent_around_emo_docs)  #this is a list of strings.
     #vectorizer.get_feature_names()[5]  # gives names of words 
@@ -801,6 +913,7 @@ def master_corpus_to_emo_to_tfidf_term_dict(corpus, root_to_variations_dict):
     #if want to do just nouns or verbs, de-comment one of these below
     #combined_sent_around_emo_docs = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
     #combined_sent_around_emo_docs = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+    #combined_sent_around_emo_docs = only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
 
     words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs)
     root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list)
@@ -817,6 +930,7 @@ def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variat
     #if want to do just nouns or verbs, de-comment one of these below
     #combined_sent_around_emo_docs12 = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
     #combined_sent_around_emo_docs12 = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
+    combined_sent_around_emo_docs12 = only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
 
     words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
     root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs12, words_around_emo_vectors, emo_list12)
@@ -825,18 +939,28 @@ def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variat
 root_to_tfidf_terms_dict_combo_corpora = alt_master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, waking_corpus_clean_2, root_to_variations_dict)
 
 
-# now can explore this dict and try nn ony and vb only, and see what else I can do
-# to make this interesting. ratio again? to compare ea corpus? 
-# to compare two emos? -- could do that too.
+len(root_to_tfidf_terms_dict_combo_corpora)
+root_to_tfidf_terms_dict_combo_corpora.keys()
+root_to_tfidf_terms_dict_combo_corpora['nervous1'][0][:50]
+root_to_tfidf_terms_dict_combo_corpora['nervous2'][0][:50]
+
+root_to_tfidf_terms_dict_combo_corpora['anxiety1'][0][:50]
+root_to_tfidf_terms_dict_combo_corpora['anxiety2'][0][:50]
+
+root_to_tfidf_terms_dict_combo_corpora['happy1'][0][:50]
+root_to_tfidf_terms_dict_combo_corpora['happy2'][0][:50]
+
+root_to_tfidf_terms_dict_combo_corpora['frustrated1'][0][:50]
+root_to_tfidf_terms_dict_combo_corpora['frustrated2'][0][:50]
+
+# to just produce results if tf-idf over a certain amount:
+init_results = root_to_tfidf_terms_dict_combo_corpora['fear2'][0][:10]
+results = [tuple for tuple in init_results if tuple[1] > .18]  #this sorts by the 2nd item in the tuple, the tf-idf score
 
 
 
 
 
-
-
-# see how to tweak so can run it for both corpora at same time.
-# what if i combo both corpora in to 'corpus'? don't think that works? because...
 
 
 
