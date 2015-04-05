@@ -19,7 +19,6 @@ from textblob import TextBlob
 import seaborn as sns
 from matplotlib import rcParams
 
-pd
 #import flask
 #
 ## Initialize the app
@@ -685,49 +684,34 @@ len(set(all_emo_variations))
 # of sentence. seems worth playing with this approach. try next.
 
 
+def start_location(emo_loc):
+    start_loc = emo_loc - 100  
+    if start_loc < 0:
+        start_loc = 0
+    return start_loc
+
+def end_locaction(emo_loc, doc):
+   end_loc = emo_loc + 100
+   if end_loc > len(doc):
+       end_loc = len(doc)
+   return end_loc
 
 
 def corpus_to_root_to_sentences_alt(corpus_clean, root_to_variations_dict):
     #tokenizer = TreebankWordTokenizer()
     root_to_sentences_dict = defaultdict(list)
     for doc in corpus_clean[:]:
+        doc_words_set = set(TextBlob(doc).words)
         for root in root_to_variations_dict:
-            intersection = set(root_to_variations_dict[root]) & set(TextBlob(doc).words)
-            if intersection:
-                emo_loc = doc.rfind(list(intersection)[0])
-                start_loc = emo_loc - 150
-                end_loc = emo_loc + 150
-                if start_loc < 0:
-                    start_loc = 0
-                if end_loc > len(doc):
-                    end_loc = len(doc)
+            emo_words_set = set(root_to_variations_dict[root])
+            intersection1 = emo_words_set.intersection(doc_words_set)
+            if intersection1:
+                emo_loc = doc.rfind(list(intersection1)[0])
+                start_loc = start_location(emo_loc)
+                end_loc = end_locaction(emo_loc, doc)
                 emo_relevant_part_of_doc = doc[start_loc: end_loc]
                 root_to_sentences_dict[root].append(emo_relevant_part_of_doc)                   
     return root_to_sentences_dict
-
-root_to_sentences_dream_dict = corpus_to_root_to_sentences_alt(corpus_clean, root_to_variations_dict)
-
-
-#len(corpus_clean[2])
-#corpus_clean = ['this is dream 1 and i feel good.', 'this is dream 2 and i feel amazing', 'this is dream 3 and i also feel amazing. really i do doooooooooooooooooooooooooooooooooooooooo Yessssssssssssssssssssssssssssssssssssssss ONeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee Doneeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee.  xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz']
-
-#root_to_variations_dict['funny'] = ['fun', 'funny', 'funniness']
-#root = 'funny'
-#
-#intersection = set(animals) & set(TextBlob(a_string).words)
-#animals = ['cats', 'cat', 'dogs']
-#
-#emo_loc = a_string.rfind(list(intersection)[0])  #returns position of first letter of word ('f')
-#len(a_string)
-#start_loc = emo_loc - 150
-#end_loc = emo_loc + 150
-#if start_loc < 0:
-#    start_loc = 0
-#if end_loc > len(a_string):
-#    end_loc = len(a_string)
-#    
-#a_string[start_loc: end_loc]
-
 
 
 # takes one corpus and returns a dict of root emos to sentences containing that emo:
@@ -779,8 +763,12 @@ root_to_sentences_dream_dict.keys()[0]
 # and the emo list corresponding to those docs. but these lists have both info from
 # corpus 1 and corpus 2. 
 def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
-    root_to_sentences_dict_corp1 = corpus_to_root_to_sentences(corpus1, root_to_variations_dict)    
-    root_to_sentences_dict_corp2 = corpus_to_root_to_sentences(corpus2, root_to_variations_dict)    
+    #root_to_sentences_dict_corp1 = corpus_to_root_to_sentences(corpus1, root_to_variations_dict)    
+    #root_to_sentences_dict_corp2 = corpus_to_root_to_sentences(corpus2, root_to_variations_dict)    
+    # comment out above two fs and uncomment below two fs to compare looking at sentences
+    # with emos vs. ~300 characters that contain emos
+    root_to_sentences_dict_corp1 = corpus_to_root_to_sentences_alt(corpus1, root_to_variations_dict)    
+    root_to_sentences_dict_corp2 = corpus_to_root_to_sentences_alt(corpus2, root_to_variations_dict)      
     combined_sent_around_emo_docs1, emo_list1 = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict_corp1)
     combined_sent_around_emo_docs2, emo_list2 = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict_corp2)
     combined_sent_around_emo_docs12 = combined_sent_around_emo_docs1 + combined_sent_around_emo_docs2
@@ -788,6 +776,7 @@ def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
     emo_list2_change = [emo + '2' for emo in emo_list2]
     emo_list12 = emo_list1_change + emo_list2_change
     return combined_sent_around_emo_docs12, emo_list12
+
 
 
 # what gets fed into vectorizer. want un-pluralized, only real words, and lowercase
@@ -862,9 +851,13 @@ def only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs):
     return only_VB_NN_combined_sent_w_emo_docs
 
 
+# instead of tfidf vectorizing, can do a function here to simply count the
+# words (minus the stop words). for ea emo: get list of words and counts
+# and then can list top x 
+
 def tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs):
     # add all emotion words to stoplist    
-    my_words = set(all_emo_variations)
+    my_words = set(all_emo_variations + ['felt', 'feel', 'feeling', 'feels'])
     my_stop_words = text.ENGLISH_STOP_WORDS.union(my_words)
     #vectorizer = TfidfVectorizer(stop_words="english")  #orig text just using "english" stopwords
     vectorizer = TfidfVectorizer(stop_words=set(my_stop_words))  # add all emo words in dict as stop words
@@ -873,6 +866,10 @@ def tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs):
     return words_around_emo_vectors, vectorizer
 
 words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs)
+
+
+#lista = ['hope', 'mope', 'dope']
+#lista + ['one', 'two']
 
 
 # get terms in firs doc sorted by tf-idf
@@ -922,6 +919,7 @@ def master_corpus_to_emo_to_tfidf_term_dict(corpus, root_to_variations_dict):
 root_to_tfidf_terms_dict = master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, root_to_variations_dict)
 
 
+
 # gives tfidfs for each emo labeled as either belonging to corpus1 or corpus2
 def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variations_dict):
     all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)       
@@ -941,27 +939,34 @@ root_to_tfidf_terms_dict_combo_corpora = alt_master_corpus_to_emo_to_tfidf_term_
 
 len(root_to_tfidf_terms_dict_combo_corpora)
 root_to_tfidf_terms_dict_combo_corpora.keys()
-root_to_tfidf_terms_dict_combo_corpora['nervous1'][0][:50]
-root_to_tfidf_terms_dict_combo_corpora['nervous2'][0][:50]
+root_to_tfidf_terms_dict_combo_corpora['overwhelmed1'][0][:50]
+#root_to_tfidf_terms_dict_combo_corpora['nervous2'][0][:50]
 
-root_to_tfidf_terms_dict_combo_corpora['anxiety1'][0][:50]
-root_to_tfidf_terms_dict_combo_corpora['anxiety2'][0][:50]
-
-root_to_tfidf_terms_dict_combo_corpora['happy1'][0][:50]
-root_to_tfidf_terms_dict_combo_corpora['happy2'][0][:50]
-
-root_to_tfidf_terms_dict_combo_corpora['frustrated1'][0][:50]
-root_to_tfidf_terms_dict_combo_corpora['frustrated2'][0][:50]
 
 # to just produce results if tf-idf over a certain amount:
-init_results = root_to_tfidf_terms_dict_combo_corpora['fear2'][0][:10]
-results = [tuple for tuple in init_results if tuple[1] > .18]  #this sorts by the 2nd item in the tuple, the tf-idf score
+emo_list = ['fear1', 'fear2', 'anxiety1', 'anxiety2', 'happy1', 'happy2', 'joy1', 'joy2', 'guilt1', 'guilt2']
+for emo in emo_list:
+    init_results = root_to_tfidf_terms_dict_combo_corpora[emo][0][:10]
+    results = [tuple for tuple in init_results if tuple[1] > .1]  #this sorts by the 2nd item in the tuple, the tf-idf score   
+    print emo
+    for result in results:        
+        print result
+    print
+
+
+# now have two ways of doing it. worth also comparing with just raw counts? prob. 
 
 
 
-
-
-
+#pickle this root_to_tfidf_terms_dict_combo_corpora. but doesn't seem better
+#than original one, right? i'm using corpus_to_root_to_sentences_alt instead of
+#corpus_to_root_to_sentences
+with open('root_to_tfidf_terms_dict_combo_corpora_300_char_around.pkl', 'w') as picklefile:
+    pickle.dump(root_to_tfidf_terms_dict_combo_corpora, picklefile)
+    
+len(root_to_tfidf_terms_dict_combo_corpora.values())
+len(root_to_tfidf_terms_dict_combo_corpora['fear1'][0])
+# creating 3000 tuples for ea emo. how to cut that down?
 
 
 
