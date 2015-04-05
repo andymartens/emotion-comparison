@@ -744,17 +744,33 @@ def sentences_combo(sentences_in_doc, i):
 # takes one corpus and returns a dict of root emos to sentences containing that emo
 # set it up now so takes the sentence with emo and adjacent two sentences also
 def corpus_to_root_to_sentences(corpus_clean, root_to_variations_dict):
-    tokenizer = TreebankWordTokenizer()
+    #tokenizer = TreebankWordTokenizer()
     root_to_sentences_dict = defaultdict(list)
     for doc in corpus_clean[:]:
-        sentences_in_doc = sent_tokenize(doc)
-        for i in range(len(sentences_in_doc)):
-            sentence = sentences_in_doc[i]
-            words_in_sent = tokenizer.tokenize(sentence)
-            for root in root_to_variations_dict:
-                if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
-                    combo_sentences = sentences_combo(sentences_in_doc, i)
-                    root_to_sentences_dict[root].append(combo_sentences) 
+        words_in_doc = TextBlob(doc).words
+        for root in root_to_variations_dict:
+            if bool(set(root_to_variations_dict[root]) & set(words_in_doc)):
+                sentences_in_doc = sent_tokenize(doc)
+                i = 0
+                while i < len(sentences_in_doc):               
+                #for i in range(len(sentences_in_doc)):                
+                    if bool(set(root_to_variations_dict[root]) & set(TextBlob(sentences_in_doc[i]).words)):
+                        combo_sentences = sentences_combo(sentences_in_doc, i)
+                        root_to_sentences_dict[root].append(combo_sentences) 
+                        i = len(sentences_in_doc) + 1
+                    else:
+                        i = i + 1
+
+######## this way it was taking two sets of sentences from a doc if the same emo word appeared twice. wait i want that for basic anys
+#        sentences_in_doc = sent_tokenize(doc)
+#        for i in range(len(sentences_in_doc)):
+#            sentence = sentences_in_doc[i]
+#            words_in_sent = tokenizer.tokenize(sentence)
+#            for root in root_to_variations_dict:
+#                if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
+#                    combo_sentences = sentences_combo(sentences_in_doc, i)
+#                    root_to_sentences_dict[root].append(combo_sentences) 
+
 ######## use the following code if want to just get the once sentence with the emo:
 #        for sentence in sentences_in_doc:
 #            words_in_sent = tokenizer.tokenize(sentence)
@@ -765,14 +781,9 @@ def corpus_to_root_to_sentences(corpus_clean, root_to_variations_dict):
 
 
 
-
-
-
-
-
 #sentence_blob
 #
-#root_to_sentences_dream_dict = corpus_to_root_to_sentences(dream_corpus_clean_2, root_to_variations_dict)
+root_to_sentences_dream_dict = corpus_to_root_to_sentences(dream_corpus_clean_2, root_to_variations_dict)
 #len(root_to_sentences_dream_dict)
 #corpus_clean = dream_corpus_clean_2[:20]
 #print root_to_sentences_dream_dict['joy'][0]
@@ -1014,20 +1025,29 @@ def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variat
 
 root_to_tfidf_terms_dict_combo_corpora = alt_master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, waking_corpus_clean_2, root_to_variations_dict)
 root_to_sentences_dream_dict = corpus_to_root_to_sentences(dream_corpus_clean_2, root_to_variations_dict)
+root_to_sentences_waking_dict = corpus_to_root_to_sentences(waking_corpus_clean_2, root_to_variations_dict)
 
 
 def give_assoc_words_and_sentences(root_to_tfidf_terms_dict_combo_corpora, emo):
-# WORKING
-init_results = root_to_tfidf_terms_dict_combo_corpora['fear1'][0][:10]
-results = [tuple for tuple in init_results if tuple[1] > .1]  #this sorts by the 2nd item in the tuple, the tf-idf score   
-for result in results:
-    print result
-    for i in range(len(root_to_sentences_dream_dict['fear'])):
-        if result[0] in set(TextBlob(root_to_sentences_dream_dict['fear'][i]).words.singularize()):
-            print root_to_sentences_dream_dict['fear'][i]
-            print            
-            break
+# WORKING -- GIVES TERMS BACK AND SENTENCES/CONTEXT
+    init_results = root_to_tfidf_terms_dict_combo_corpora['fear2'][0][:10]
+    results = [tuple for tuple in init_results if tuple[1] > .1]  #this sorts by the 2nd item in the tuple, the tf-idf score   
+    for result in results:
+        print result
+        for i in range(len(root_to_sentences_waking_dict['fear'])):
+            if result[0] in set(TextBlob(root_to_sentences_waking_dict['fear'][i]).words.lower().singularize()):
+                last_doc = root_to_sentences_waking_dict['fear'][i]
+                print last_doc
+                print
+                break
 
+# just want to presesnt unique docs. 
+ 
+ 
+result = results[0]
+i = 0
+print root_to_sentences_dream_dict['fear'][5]
+# damnit, doubling up
 
 
 
