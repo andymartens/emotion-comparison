@@ -621,6 +621,10 @@ from sklearn.feature_extraction.text import CountVectorizer
 from scipy.sparse import coo_matrix
 from sklearn.feature_extraction import text
 import enchant  
+import pickle
+import numpy as np
+from textblob import TextBlob
+from collections import defaultdict
 
 
 # plan:
@@ -685,43 +689,43 @@ len(set(all_emo_variations))
 # of sentence. seems worth playing with this approach. try next.
 
 
-def start_location(emo_loc):
-    start_loc = emo_loc - 150  
-    if start_loc < 0:
-        start_loc = 0
-    return start_loc
-
-def end_locaction(emo_loc, doc):
-   end_loc = emo_loc + 150
-   if end_loc > len(doc):
-       end_loc = len(doc)
-   return end_loc
-
-
-def corpus_to_root_to_sentences_alt(corpus_clean, root_to_variations_dict):
-    #tokenizer = TreebankWordTokenizer()
-    root_to_sentences_dict = defaultdict(list)
-    for doc in corpus_clean[:]:
-        doc_words_set = set(TextBlob(doc).words)
-        for root in root_to_variations_dict:
-            emo_words_set = set(root_to_variations_dict[root])
-            intersection1 = emo_words_set.intersection(doc_words_set)
-            if intersection1:
-                emo_loc = doc.rfind(list(intersection1)[0])
-                start_loc = start_location(emo_loc)
-                end_loc = end_locaction(emo_loc, doc)
-                emo_relevant_part_of_doc = doc[start_loc: end_loc]
-                root_to_sentences_dict[root].append(emo_relevant_part_of_doc)                   
-    return root_to_sentences_dict
-
-root_to_surrounding_words_dream_dict = corpus_to_root_to_sentences_alt(dream_corpus_clean_2, root_to_variations_dict)
-root_to_surrounding_words_waking_dict = corpus_to_root_to_sentences_alt(waking_corpus_clean_2, root_to_variations_dict)
-
-len(root_to_surrounding_words_dream_dict)
-len(root_to_surrounding_words_waking_dict)
-for item in root_to_surrounding_words_dream_dict['fear']:
-    print item
-    print
+#def start_location(emo_loc):
+#    start_loc = emo_loc - 150  
+#    if start_loc < 0:
+#        start_loc = 0
+#    return start_loc
+#
+#def end_locaction(emo_loc, doc):
+#   end_loc = emo_loc + 150
+#   if end_loc > len(doc):
+#       end_loc = len(doc)
+#   return end_loc
+#
+#
+#def corpus_to_root_to_sentences_alt(corpus_clean, root_to_variations_dict):
+#    #tokenizer = TreebankWordTokenizer()
+#    root_to_sentences_dict = defaultdict(list)
+#    for doc in corpus_clean[:]:
+#        doc_words_set = set(TextBlob(doc).words)
+#        for root in root_to_variations_dict:
+#            emo_words_set = set(root_to_variations_dict[root])
+#            intersection1 = emo_words_set.intersection(doc_words_set)
+#            if intersection1:
+#                emo_loc = doc.rfind(list(intersection1)[0])
+#                start_loc = start_location(emo_loc)
+#                end_loc = end_locaction(emo_loc, doc)
+#                emo_relevant_part_of_doc = doc[start_loc: end_loc]
+#                root_to_sentences_dict[root].append(emo_relevant_part_of_doc)                   
+#    return root_to_sentences_dict
+#
+#root_to_surrounding_words_dream_dict = corpus_to_root_to_sentences_alt(dream_corpus_clean_2, root_to_variations_dict)
+#root_to_surrounding_words_waking_dict = corpus_to_root_to_sentences_alt(waking_corpus_clean_2, root_to_variations_dict)
+#
+#len(root_to_surrounding_words_dream_dict)
+#len(root_to_surrounding_words_waking_dict)
+#for item in root_to_surrounding_words_dream_dict['fear']:
+#    print item
+#    print
     
 
 def sentences_combo(sentences_in_doc, i): 
@@ -777,6 +781,7 @@ def corpus_to_root_to_sentences(corpus_clean, root_to_variations_dict):
 #            for root in root_to_variations_dict:
 #                if bool(set(root_to_variations_dict[root]) & set(words_in_sent)):
 #                    root_to_sentences_dict[root].append(sentences_in_doc[i])  # append 2 adj sent too.
+    
     return root_to_sentences_dict
 
 
@@ -843,6 +848,10 @@ root_to_sentences_dream_dict.keys()[0]
 def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
     root_to_sentences_dict_corp1 = corpus_to_root_to_sentences(corpus1, root_to_variations_dict)    
     root_to_sentences_dict_corp2 = corpus_to_root_to_sentences(corpus2, root_to_variations_dict)    
+    with open('emotion_flask_app/root_to_sentences_dict_corp1.pkl', 'w') as picklefile:
+        pickle.dump(root_to_sentences_dict_corp1, picklefile)
+    with open('emotion_flask_app/root_to_sentences_dict_corp2.pkl', 'w') as picklefile:
+        pickle.dump(root_to_sentences_dict_corp2, picklefile)
     # comment out above two fs and uncomment below two fs to compare looking at sentences
     # with emos vs. ~300 characters that contain emos
     #root_to_sentences_dict_corp1 = corpus_to_root_to_sentences_alt(corpus1, root_to_variations_dict)    
@@ -988,21 +997,21 @@ len(root_to_tfidf_terms_dict)
 # create master f to run all this code above. 
 #takes the corpus (e.g., of dreams) and returns a dict of 
 # emo keys to terms assoc w those emos and tf-idfs of those terms
-def master_corpus_to_emo_to_tfidf_term_dict(corpus, root_to_variations_dict):
-    all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)   
-    root_to_sentences_dict = corpus_to_root_to_sentences(corpus, root_to_variations_dict)
-    combined_sent_around_emo_docs, emo_list = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict)
-
-    #if want to do just nouns or verbs, de-comment one of these below
-    #combined_sent_around_emo_docs = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
-    #combined_sent_around_emo_docs = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
-    #combined_sent_around_emo_docs = only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
-
-    words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs)
-    root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list)
-    return root_to_tfidf_terms_dict
-
-root_to_tfidf_terms_dict = master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, root_to_variations_dict)
+#def master_corpus_to_emo_to_tfidf_term_dict(corpus, root_to_variations_dict):
+#    all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)   
+#    root_to_sentences_dict = corpus_to_root_to_sentences(corpus, root_to_variations_dict)
+#    combined_sent_around_emo_docs, emo_list = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict)
+#
+#    #if want to do just nouns or verbs, de-comment one of these below
+#    #combined_sent_around_emo_docs = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+#    #combined_sent_around_emo_docs = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+#    #combined_sent_around_emo_docs = only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs)
+#
+#    words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs)
+#    root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list)
+#    return root_to_tfidf_terms_dict
+#
+#root_to_tfidf_terms_dict = master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, root_to_variations_dict)
 
 
 
@@ -1019,13 +1028,98 @@ def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variat
     #select one of the below two options for either tf-idf or just tf:
     words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
     #words_around_emo_vectors, vectorizer = tf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
-
     root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs12, words_around_emo_vectors, emo_list12)
-    return root_to_tfidf_terms_dict
+    # write these dicts again to the emotion_flask_app folder so can be used by app
+    with open('emotion_flask_app/root_to_tfidf_terms_dict.pkl', 'w') as picklefile:
+        pickle.dump(root_to_tfidf_terms_dict, picklefile)
+    #return root_to_tfidf_terms_dict
+
+
+
 
 root_to_tfidf_terms_dict_combo_corpora = alt_master_corpus_to_emo_to_tfidf_term_dict(dream_corpus_clean_2, waking_corpus_clean_2, root_to_variations_dict)
-root_to_sentences_dream_dict = corpus_to_root_to_sentences(dream_corpus_clean_2, root_to_variations_dict)
-root_to_sentences_waking_dict = corpus_to_root_to_sentences(waking_corpus_clean_2, root_to_variations_dict)
+
+with open('emotion_flask_app/root_to_sentences_dict_corp1.pkl', 'r') as picklefile:
+    root_to_sentences_dict_corp1 = pickle.load(picklefile)
+with open('emotion_flask_app/root_to_sentences_dict_corp2.pkl', 'r') as picklefile:
+    root_to_sentences_dict_corp2 = pickle.load(picklefile)
+
+len(root_to_sentences_dict_corp2)
+
+
+
+
+
+def give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corpX, term_corpusX, emo):
+    init_results = root_to_tfidf_terms_dict_combo_corpora[term_corpusX][0][:5]
+    results = [tuple for tuple in init_results if tuple[1] > .1]  #this sorts by the 2nd item in the tuple, the tf-idf score   
+    print term_corpusX
+    for result in results:
+        print result
+        #print len(root_to_sentences_dict_corpX[emo])
+        for i in range(len(root_to_sentences_dict_corpX[emo])):
+            if result[0] in set(TextBlob(root_to_sentences_dict_corpX[emo][i]).words.lower().singularize()):
+                doc_w_word = root_to_sentences_dict_corpX[emo][i]
+                print doc_w_word
+                print
+                break
+
+
+def print_results_from_both_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, root_to_sentences_dict_corp2, emo):
+    term_corpus1 = emo + '1'
+    term_corpus2 = emo + '2'
+    give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, term_corpus1, emo)
+    give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp2, term_corpus2, emo)
+
+
+
+emo = 'fear'
+term_corpus1 = emo + '1'
+term_corpus2 = emo + '2'
+give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, term_corpus1)
+give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp2, term_corpus2)
+
+
+# this prints out results for words assoc with emo and example sentences
+print_results_from_both_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, root_to_sentences_dict_corp2, 'fear')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# WORKING -- GIVES TERMS BACK AND SENTENCES/CONTEXT
+    init_results = root_to_tfidf_terms_dict_combo_corpora['fear2'][0][:10]
+    results = [tuple for tuple in init_results if tuple[1] > .1]  #this sorts by the 2nd item in the tuple, the tf-idf score   
+    for result in results:
+        print result
+        for i in range(len(root_to_sentences_waking_dict['fear'])):
+            if result[0] in set(TextBlob(root_to_sentences_waking_dict['fear'][i]).words.lower().singularize()):
+                last_doc = root_to_sentences_waking_dict['fear'][i]
+                print last_doc
+                print
+                break
+
+
+give_assoc_words_and_sentences(root_to_tfidf_terms_dict_combo_corpora, 'fear')
+
+
+
+
+
+
+#
+#root_to_sentences_dream_dict = corpus_to_root_to_sentences(dream_corpus_clean_2, root_to_variations_dict)
+#root_to_sentences_waking_dict = corpus_to_root_to_sentences(waking_corpus_clean_2, root_to_variations_dict)
 
 
 def give_assoc_words_and_sentences(root_to_tfidf_terms_dict_combo_corpora, emo):

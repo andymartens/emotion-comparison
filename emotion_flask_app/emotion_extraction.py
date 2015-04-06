@@ -157,7 +157,7 @@ def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_co
     #             .4, .1, .6, .9, .4, .7, .9, .8, .7, .6]
 
     #grad = pd.DataFrame({'ratio' : ratio, 'emotion': emotion, 'intensity': intensity})
-    plt.figure(figsize=(5, 8))
+    plt.figure(figsize=(5, 6.5))
     #change = grad.change[grad.change > 0]  #in future step, just create one long list of ratios and select the top 20 here (and bottom 20 when do other/second graph)
     #city = grad.city[grad.change > 0]
     #intensity = grad.intensity[grad.change > 0]
@@ -166,7 +166,7 @@ def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_co
     #intensity = grad.intensity
 
     pos = np.arange(len(emotion))
-    plt.title(corpus1_name + ' / ' + corpus2_name, horizontalalignment='center')
+    #plt.title(corpus1_name + ' / ' + corpus2_name, horizontalalignment='center')
     barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
     # the values for bars or lines or whatever is plotted. and these values are now put
     # into barlist object so i can use them below, e.g., loop through them and give the
@@ -206,9 +206,9 @@ def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_co
     plt.grid(axis = 'x', color ='white', linestyle='-')
     #set plot limits
     plt.ylim(pos.max() + 1, pos.min() - 1)
-    plt.xlim(0, 4)
+    plt.xlim(0, 5)
 
-    plt.tight_layout()  #this keeps words from getting cut off
+    plt.tight_layout(pad=0.01)  #this keeps words from getting cut off
     plt.savefig('static/corpus1_to_corpus2.png')  #will need to change this so saves to static folder
 
 
@@ -271,7 +271,7 @@ def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_co
     #             .4, .1, .6, .9, .4, .7, .9, .8, .7, .6]
 
     #grad = pd.DataFrame({'ratio' : ratio, 'emotion': emotion, 'intensity': intensity})
-    plt.figure(figsize=(5, 8))
+    plt.figure(figsize=(5, 6.5))
     #change = grad.change[grad.change > 0]  #in future step, just create one long list of ratios and select the top 20 here (and bottom 20 when do other/second graph)
     #city = grad.city[grad.change > 0]
     #intensity = grad.intensity[grad.change > 0]
@@ -280,7 +280,7 @@ def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_co
     #intensity = grad.intensity
 
     pos = np.arange(len(emotion))
-    plt.title(corpus2_name + ' / ' + corpus1_name, horizontalalignment='center')
+    #plt.title(corpus2_name + ' / ' + corpus1_name, horizontalalignment='center')
     barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
     # the values for bars or lines or whatever is plotted. and these values are now put
     # into barlist object so i can use them below, e.g., loop through them and give the
@@ -320,9 +320,9 @@ def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_co
     plt.grid(axis = 'x', color ='white', linestyle='-')
     #set plot limits
     plt.ylim(pos.max() + 1, pos.min() - 1)
-    plt.xlim(0, 4)
+    plt.xlim(0, 5)
 
-    plt.tight_layout()  #this keeps words from getting cut off
+    plt.tight_layout(pad=.01)  #this keeps words from getting cut off
     plt.savefig('static/corpus2_to_corpus1.png')  #will need to change this so saves to static folder
 
 # def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus2_to_corpus1_ratios):
