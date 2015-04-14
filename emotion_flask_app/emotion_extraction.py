@@ -19,14 +19,12 @@ import pickle
 from matplotlib import rcParams
 
 
-
 # Retrieve corresponding_root_to_ratings_dict:
 with open('corresponding_root_to_ratings_dict.pkl', 'r') as picklefile:
     corresponding_root_to_ratings_dict = pickle.load(picklefile)
 
 
-#in each set of text docs
-#change all words in reports to lowercase
+# in each set of text docs change all words in reports to lowercase
 def corpus_lowercase(corpus):
     corpus_lower =[]
     for report in corpus:
@@ -150,21 +148,9 @@ def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_co
         if right:
             ax.yaxis.tick_right()
 
-
     emotion = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
     ratio = [round(freq[1], 2) for freq in sorted_emotion_corpus1_to_corpus2_ratios[:20]]
-    #intensity = [.2, .7, .7, .9, .1, .8, .7, .6, .1, .5,
-    #             .4, .1, .6, .9, .4, .7, .9, .8, .7, .6]
-
-    #grad = pd.DataFrame({'ratio' : ratio, 'emotion': emotion, 'intensity': intensity})
     plt.figure(figsize=(5, 6.5))
-    #change = grad.change[grad.change > 0]  #in future step, just create one long list of ratios and select the top 20 here (and bottom 20 when do other/second graph)
-    #city = grad.city[grad.change > 0]
-    #intensity = grad.intensity[grad.change > 0]
-    #ratio = grad.ratio
-    #emotion = grad.emotion
-    #intensity = grad.intensity
-
     pos = np.arange(len(emotion))
     #plt.title(corpus1_name + ' / ' + corpus2_name, horizontalalignment='center')
     barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
@@ -212,21 +198,6 @@ def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_co
     plt.savefig('static/corpus1_to_corpus2.png')  #will need to change this so saves to static folder
 
 
-# def plot_ratios_corpus1_to_corpus2(corpus1_name, corpus2_name, sorted_emotion_corpus1_to_corpus2_ratios):
-#     X = [word[0] for word in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
-#     Y = [freq[1] for freq in sorted_emotion_corpus1_to_corpus2_ratios[:25]]
-#     fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
-#     sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
-#     sns.despine(left=True)
-#     plt.title('Emotion-words Most Representative of ' + corpus1_name, fontsize=17)
-#     plt.xticks(rotation=75)
-#     plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
-#     plt.ylim(1, 3.05)
-#     plt.ylabel('Frequency in {} relative to {}'.format(corpus1_name, corpus2_name), fontsize=15)
-#     plt.tight_layout()
-#     plt.savefig("static/corpus1_to_corpus2.png")
-
-
 #plot  -
 def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus2_to_corpus1_ratios, corresponding_root_to_ratings_dict):
     #set some graph parameters:
@@ -264,21 +235,9 @@ def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_co
         if right:
             ax.yaxis.tick_right()
 
-
     emotion = [word[0] for word in sorted_emotion_corpus2_to_corpus1_ratios[:20]]
     ratio = [round(freq[1], 2) for freq in sorted_emotion_corpus2_to_corpus1_ratios[:20]]
-    #intensity = [.2, .7, .7, .9, .1, .8, .7, .6, .1, .5,
-    #             .4, .1, .6, .9, .4, .7, .9, .8, .7, .6]
-
-    #grad = pd.DataFrame({'ratio' : ratio, 'emotion': emotion, 'intensity': intensity})
     plt.figure(figsize=(5, 6.5))
-    #change = grad.change[grad.change > 0]  #in future step, just create one long list of ratios and select the top 20 here (and bottom 20 when do other/second graph)
-    #city = grad.city[grad.change > 0]
-    #intensity = grad.intensity[grad.change > 0]
-    #ratio = grad.ratio
-    #emotion = grad.emotion
-    #intensity = grad.intensity
-
     pos = np.arange(len(emotion))
     #plt.title(corpus2_name + ' / ' + corpus1_name, horizontalalignment='center')
     barlist = plt.barh(pos, ratio)  # the plt.plot function returns certain info, e.g.,
@@ -325,20 +284,6 @@ def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_co
     plt.tight_layout(pad=.01)  #this keeps words from getting cut off
     plt.savefig('static/corpus2_to_corpus1.png')  #will need to change this so saves to static folder
 
-# def plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, sorted_emotion_corpus2_to_corpus1_ratios):
-#     X = [word[0] for word in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
-#     Y = [freq[1] for freq in sorted_emotion_corpus2_to_corpus1_ratios[:25]]
-#     fig = plt.figure(figsize=(15, 5))  #add this to set resolution: , dpi=100
-#     sns.barplot(x = np.array(range(len(X))), y = np.array(Y))
-#     sns.despine(left=True)
-#     plt.title('Emotion-words Most Representative of ' + corpus2_name, fontsize=17)
-#     plt.xticks(rotation=75)
-#     plt.xticks(np.array(range(len(X))), np.array(X), rotation=75, fontsize=15)
-#     plt.ylim(1, 3.05)
-#     plt.ylabel('Frequency in {} relative to {}'.format(corpus2_name, corpus1_name), fontsize=15)
-#     plt.tight_layout()
-#     plt.savefig("static/corpus2_to_corpus1.png")
-
 
 def corpus_to_alphabetical_emotion_counts(corpus, root_to_variations_dict):
     corpus_lower = corpus_lowercase(corpus)
@@ -356,13 +301,210 @@ def plot_alphabetical_lists(alphabetical_emotion_counts_corpus1, alphabetical_em
     plot_ratios_corpus2_to_corpus1(corpus1_name, corpus2_name, corpus2_to_corpus1_ratios, corresponding_root_to_ratings_dict)
 
 
-##############################################################################
+################################################################################
 #master function -- takes input of corpuses and outputs 2 plots:
 def corpuses_to_plot(corpus1, corpus2, corpus1_name, corpus2_name, root_to_variations_dict, corresponding_root_to_ratings_dict):
     corpus1_alphabetical_counts_list = corpus_to_alphabetical_emotion_counts(corpus1, root_to_variations_dict)
     corpus2_alphabetical_counts_list = corpus_to_alphabetical_emotion_counts(corpus2, root_to_variations_dict)
     plot_alphabetical_lists(corpus1_alphabetical_counts_list, corpus2_alphabetical_counts_list, corpus1_name, corpus2_name, corresponding_root_to_ratings_dict)
 ###############################################################################
-
-
 #corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', clore_and_storm_Mar19_dict)
+
+
+
+
+
+################################################################################
+# functions for getting words associated with particular emotions and examples
+# of text containing and specific emotions
+
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import TreebankWordTokenizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction.text import CountVectorizer
+from scipy.sparse import coo_matrix
+from sklearn.feature_extraction import text
+import enchant
+import pickle
+import numpy as np
+from textblob import TextBlob
+from collections import defaultdict
+
+
+# Retrieve emotion-words to variations dict:
+with open('root_to_variations_dict.pkl', 'r') as picklefile:
+    root_to_variations_dict = pickle.load(picklefile)
+
+
+def create_all_emo_variations_list(root_to_variations_dict):
+    all_emo_variations = []
+    for variation_set in root_to_variations_dict.values():
+        all_emo_variations += variation_set
+    return all_emo_variations
+
+all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)
+
+
+def sentences_combo(sentences_in_doc, i):
+    x = (i-1) >= 0
+    y = (i+2) <= len(sentences_in_doc)
+    if x and y:
+        combo_sentences = sentences_in_doc[i-1] + ' ' + sentences_in_doc[i] + ' ' + sentences_in_doc[i+1]
+        return combo_sentences
+    elif x == False and y == True:
+        combo_sentences = sentences_in_doc[i] + ' ' + sentences_in_doc[i+1]
+        return combo_sentences
+    elif x == True and y == False:
+        combo_sentences = sentences_in_doc[i-1] + ' ' + sentences_in_doc[i]
+        return combo_sentences
+    elif x == False and y == False:
+        combo_sentences = sentences_in_doc[i]
+        return combo_sentences
+
+
+# takes one corpus and returns a dict of root emos to sentences containing that emo
+# set it up now so takes the sentence with emo and adjacent two sentences also
+def corpus_to_root_to_sentences(corpus_clean, root_to_variations_dict):
+    #tokenizer = TreebankWordTokenizer()
+    root_to_sentences_dict = defaultdict(list)
+    for doc in corpus_clean[:]:
+        words_in_doc = TextBlob(doc).words
+        for root in root_to_variations_dict:
+            if bool(set(root_to_variations_dict[root]) & set(words_in_doc)):
+                sentences_in_doc = sent_tokenize(doc)
+                i = 0
+                while i < len(sentences_in_doc):
+                #for i in range(len(sentences_in_doc)):
+                    if bool(set(root_to_variations_dict[root]) & set(TextBlob(sentences_in_doc[i]).words)):
+                        combo_sentences = sentences_combo(sentences_in_doc, i)
+                        root_to_sentences_dict[root].append(combo_sentences)
+                        i = len(sentences_in_doc) + 1
+                    else:
+                        i = i + 1
+    return root_to_sentences_dict
+
+
+# create list of emotion docs, i.e., where each string is comprised of all the
+# sentences that contain a particular emotion word. but made ea sentence a set of words, i.e., took out repeats
+# to keep track of which emo goes with which list item, put keys/roots in a list too, in same order
+def create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict):
+    combined_sent_around_emo_docs = []
+    corresponding_emo_list = []
+    for root in root_to_sentences_dict:
+        # turn ea sentence into a set of words, so words dont count twice for one document, e.g., for one dream
+        sentences = root_to_sentences_dict[root]
+        sentences_unique_words = []
+        for sentence in sentences:
+            sentence_blob = TextBlob(sentence)
+            bag_of_words_unique_in_sentence = list(set(sentence_blob.words))
+            sentences_unique_words += bag_of_words_unique_in_sentence
+        sentences_unique_words_joined = ' '.join(sentences_unique_words)
+        combined_sent_around_emo_docs.append(sentences_unique_words_joined)
+        corresponding_emo_list.append(root)
+    return combined_sent_around_emo_docs, corresponding_emo_list
+
+
+# addition to can tfidf-vectorize both corp as same time.
+# returns list of docs (w each doc comprised of sentences w an emo word in a corpus)
+# and the emo list corresponding to those docs. but these lists have both info from
+# corpus 1 and corpus 2.
+def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
+    root_to_sentences_dict_corp1 = corpus_to_root_to_sentences(corpus1, root_to_variations_dict)
+    root_to_sentences_dict_corp2 = corpus_to_root_to_sentences(corpus2, root_to_variations_dict)
+    with open('root_to_sentences_dict_corp1.pkl', 'w') as picklefile:
+        pickle.dump(root_to_sentences_dict_corp1, picklefile)
+    with open('root_to_sentences_dict_corp2.pkl', 'w') as picklefile:
+        pickle.dump(root_to_sentences_dict_corp2, picklefile)
+    # comment out above two fs and uncomment below two fs to compare looking at sentences
+    # with emos vs. ~300 characters that contain emos
+    #root_to_sentences_dict_corp1 = corpus_to_root_to_sentences_alt(corpus1, root_to_variations_dict)
+    #root_to_sentences_dict_corp2 = corpus_to_root_to_sentences_alt(corpus2, root_to_variations_dict)
+    combined_sent_around_emo_docs1, emo_list1 = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict_corp1)
+    combined_sent_around_emo_docs2, emo_list2 = create_sentences_w_emo_list_and_emo_list(root_to_sentences_dict_corp2)
+    combined_sent_around_emo_docs12 = combined_sent_around_emo_docs1 + combined_sent_around_emo_docs2
+    emo_list1_change = [emo + '1' for emo in emo_list1]
+    emo_list2_change = [emo + '2' for emo in emo_list2]
+    emo_list12 = emo_list1_change + emo_list2_change
+    return combined_sent_around_emo_docs12, emo_list12
+
+
+# create third option here that gives back both nouns AND verbs
+def only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs):
+    d = enchant.Dict("en_US")
+    only_VB_NN_combined_sent_w_emo_docs =[]
+    for doc in combined_sent_around_emo_docs:
+        textblob_doc = TextBlob(doc)
+        doc_lc_sing_real = ' '.join([word for word in textblob_doc.words.lower().singularize() if d.check(word)])  # need to elim this d.check(word) part in order to get proper names in output
+        #doc_lc_sing_real = ' '.join([word for word in textblob_doc.words.lower().singularize()])  # need to elim this d.check(word) part in order to get proper names in output
+        textblob_doc = TextBlob(doc_lc_sing_real)
+        only_part_of_speech = ' '.join([word_tag[0] for word_tag in textblob_doc.tags if word_tag[1] == 'VB' or word_tag[1] == 'VBD' or word_tag[1] == 'VBG' or word_tag[1] == 'VBN' or word_tag[1] == 'VBP' or word_tag[1] == 'VBZ' or word_tag[1] == 'NN' or word_tag[1] == 'NNS'])
+        only_VB_NN_combined_sent_w_emo_docs.append(only_part_of_speech)
+    return only_VB_NN_combined_sent_w_emo_docs
+
+
+def tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs):
+    # add all emotion words to stoplist
+    my_words = set(all_emo_variations + ['felt', 'feel', 'feeling', 'feels'])
+    my_stop_words = text.ENGLISH_STOP_WORDS.union(my_words)
+    #vectorizer = TfidfVectorizer(stop_words="english")  #orig text just using "english" stopwords
+    vectorizer = TfidfVectorizer(stop_words=set(my_stop_words))  # add all emo words in dict as stop words
+    words_around_emo_vectors = vectorizer.fit_transform(combined_sent_around_emo_docs)  #this is a list of strings.
+    #vectorizer.get_feature_names()[5]  # gives names of words
+    return words_around_emo_vectors, vectorizer
+
+
+# get (terms, tf-idf) tuples sorted by tf-idf and put into root emo to (term, tf-idf) dict
+def create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs, words_around_emo_vectors, emo_list):
+    root_to_tfidf_terms_dict = defaultdict(list)
+    terms = np.array(vectorizer.get_feature_names())
+    for i in range(len(combined_sent_around_emo_docs)):
+        # the i is giving back info for first doc. so think getting the toarray is giving tf-idfs assoc with each term
+        terms_tfidf_for_doc = zip(terms, words_around_emo_vectors.toarray()[i])
+        sorted_terms_for_doc = sorted(terms_tfidf_for_doc, key=lambda tup: tup[1], reverse=True)  #this sorts by the 2nd item in the tuple, the tf-idf score
+        root = emo_list[i]
+        root_to_tfidf_terms_dict[root].append(sorted_terms_for_doc)
+    return root_to_tfidf_terms_dict
+
+
+# gives tfidfs for each emo labeled as either belonging to corpus1 or corpus2
+def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variations_dict):
+    all_emo_variations = create_all_emo_variations_list(root_to_variations_dict)
+    combined_sent_around_emo_docs12, emo_list12 = create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2)
+    #if want to do just nouns or verbs, de-comment one of these below
+    #combined_sent_around_emo_docs12 = only_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
+    #combined_sent_around_emo_docs12 = only_VB_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
+    combined_sent_around_emo_docs12 = only_VB_NN_combined_sent_with_emo_docs(combined_sent_around_emo_docs12)
+    #select one of the below two options for either tf-idf or just tf:
+    words_around_emo_vectors, vectorizer = tfidf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
+    #words_around_emo_vectors, vectorizer = tf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
+    root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs12, words_around_emo_vectors, emo_list12)
+    # write these dicts again to the emotion_flask_app folder so can be used by app
+    # with open('root_to_tfidf_terms_dict.pkl', 'w') as picklefile:
+    #     pickle.dump(root_to_tfidf_terms_dict, picklefile)
+    return root_to_tfidf_terms_dict
+
+
+
+# these are for use after user inputs an emotion. they... print results at the moment.
+# where to save info to use in html?
+def give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corpX, term_corpusX, emo):
+    words = []
+    docs_w_words = []
+    init_results = root_to_tfidf_terms_dict_combo_corpora[term_corpusX][0][:5]
+    results = [tuple for tuple in init_results if tuple[1] > .1]  #this sorts by the 2nd item in the tuple, the tf-idf score
+    for result in results:
+        words.append(result)
+        #print len(root_to_sentences_dict_corpX[emo])
+        for i in range(len(root_to_sentences_dict_corpX[emo])):
+            if result[0] in set(TextBlob(root_to_sentences_dict_corpX[emo][i]).words.lower().singularize()):
+                doc_w_word = root_to_sentences_dict_corpX[emo][i]
+                docs_w_words.append(doc_w_word)
+                break
+    return words, docs_w_words
+
+def print_results_from_both_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, root_to_sentences_dict_corp2, emo):
+    term_corpus1 = emo + '1'
+    term_corpus2 = emo + '2'
+    words_1, docs_w_words_1 = give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, term_corpus1, emo)
+    words_2, docs_w_words_2 = give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp2, term_corpus2, emo)
+    return words_1, docs_w_words_1, words_2, docs_w_words_2

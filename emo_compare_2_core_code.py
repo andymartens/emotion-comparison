@@ -5,6 +5,13 @@ Created on Mon Mar 16 14:49:44 2015
 @author: charlesmartens
 """
 
+# this is the key cood for the emo app. the stuff in the emo flask app file is
+# copied from here. so think this has lastest stuff and can work from here.
+
+# next step: add the % stuff so i have the code. and run it so make sure it's
+# making graphs.
+
+
 from pattern import en
 from pattern.en import conjugate, lemma, lexeme
 #from pattern.en import tenses, PAST, PL
@@ -610,7 +617,7 @@ root_to_variations_dict['crying']
 
 corpuses_to_plot(dream_corpus_clean_2, waking_corpus_clean_2, 'Dreams', 'Real-life', root_to_variations_dict)
 
-
+len(root_to_variations_dict['happy'])
 ##############################################################################
 # this section: work on getting words assoc with emos
 # and sentences with emos in them
@@ -848,10 +855,10 @@ root_to_sentences_dream_dict.keys()[0]
 def create_sentences_w_emo_and_create_emo_list_two_corp(corpus1, corpus2):
     root_to_sentences_dict_corp1 = corpus_to_root_to_sentences(corpus1, root_to_variations_dict)    
     root_to_sentences_dict_corp2 = corpus_to_root_to_sentences(corpus2, root_to_variations_dict)    
-    with open('emotion_flask_app/root_to_sentences_dict_corp1.pkl', 'w') as picklefile:
-        pickle.dump(root_to_sentences_dict_corp1, picklefile)
-    with open('emotion_flask_app/root_to_sentences_dict_corp2.pkl', 'w') as picklefile:
-        pickle.dump(root_to_sentences_dict_corp2, picklefile)
+#    with open('emotion_flask_app/root_to_sentences_dict_corp1.pkl', 'w') as picklefile:
+#        pickle.dump(root_to_sentences_dict_corp1, picklefile)
+#    with open('emotion_flask_app/root_to_sentences_dict_corp2.pkl', 'w') as picklefile:
+#        pickle.dump(root_to_sentences_dict_corp2, picklefile)
     # comment out above two fs and uncomment below two fs to compare looking at sentences
     # with emos vs. ~300 characters that contain emos
     #root_to_sentences_dict_corp1 = corpus_to_root_to_sentences_alt(corpus1, root_to_variations_dict)    
@@ -1030,10 +1037,10 @@ def alt_master_corpus_to_emo_to_tfidf_term_dict(corpus1, corpus2, root_to_variat
     #words_around_emo_vectors, vectorizer = tf_vectorize(all_emo_variations, combined_sent_around_emo_docs12)
     root_to_tfidf_terms_dict = create_emo_to_tfidf__term_dict(vectorizer, combined_sent_around_emo_docs12, words_around_emo_vectors, emo_list12)
     # write these dicts again to the emotion_flask_app folder so can be used by app
-    with open('emotion_flask_app/root_to_tfidf_terms_dict.pkl', 'w') as picklefile:
-        pickle.dump(root_to_tfidf_terms_dict, picklefile)
-    #return root_to_tfidf_terms_dict
-
+#    with open('emotion_flask_app/root_to_tfidf_terms_dict.pkl', 'w') as picklefile:
+#        pickle.dump(root_to_tfidf_terms_dict, picklefile)
+    return root_to_tfidf_terms_dict
+# this pickling seemed to take another min and a half extra
 
 
 
@@ -1046,7 +1053,7 @@ with open('emotion_flask_app/root_to_sentences_dict_corp2.pkl', 'r') as picklefi
 
 len(root_to_sentences_dict_corp2)
 
-
+len(root_to_tfidf_terms_dict_combo_corpora)
 
 
 
@@ -1063,7 +1070,6 @@ def give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_co
                 print doc_w_word
                 print
                 break
-
 
 def print_results_from_both_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, root_to_sentences_dict_corp2, emo):
     term_corpus1 = emo + '1'
@@ -1084,40 +1090,48 @@ give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpor
 print_results_from_both_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, root_to_sentences_dict_corp2, 'fear')
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-# WORKING -- GIVES TERMS BACK AND SENTENCES/CONTEXT
-    init_results = root_to_tfidf_terms_dict_combo_corpora['fear2'][0][:10]
+# same two fs as above, but this time stores them in variables
+def give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corpX, term_corpusX, emo):
+    words = []  
+    docs_w_words = []
+    init_results = root_to_tfidf_terms_dict_combo_corpora[term_corpusX][0][:5]
     results = [tuple for tuple in init_results if tuple[1] > .1]  #this sorts by the 2nd item in the tuple, the tf-idf score   
+    print term_corpusX
     for result in results:
+        words.append(result)
         print result
-        for i in range(len(root_to_sentences_waking_dict['fear'])):
-            if result[0] in set(TextBlob(root_to_sentences_waking_dict['fear'][i]).words.lower().singularize()):
-                last_doc = root_to_sentences_waking_dict['fear'][i]
-                print last_doc
+        #print len(root_to_sentences_dict_corpX[emo])
+        for i in range(len(root_to_sentences_dict_corpX[emo])):
+            if result[0] in set(TextBlob(root_to_sentences_dict_corpX[emo][i]).words.lower().singularize()):
+                doc_w_word = root_to_sentences_dict_corpX[emo][i]
+                docs_w_words.append(doc_w_word)                
+                print doc_w_word
                 print
                 break
+    return words, docs_w_words
+
+def print_results_from_both_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, root_to_sentences_dict_corp2, emo):
+    term_corpus1 = emo + '1'
+    term_corpus2 = emo + '2'
+    words_1, docs_w_words_1 = give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, term_corpus1, emo)
+    words_2, docs_w_words_2 = give_assoc_words_and_sentences_one_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp2, term_corpus2, emo)
+    return words_1, docs_w_words_1, words_2, docs_w_words_2
+
+words_1, docs_w_words_1, words_2, docs_w_words_2 = print_results_from_both_corpora(root_to_tfidf_terms_dict_combo_corpora, root_to_sentences_dict_corp1, root_to_sentences_dict_corp2, 'scared')
 
 
-give_assoc_words_and_sentences(root_to_tfidf_terms_dict_combo_corpora, 'fear')
+
+
+words_1b = [word[0].encode('utf-8') for word in words_1]
+
+for word in words_1:
+    print word[0]
 
 
 
 
 
 
-#
 #root_to_sentences_dream_dict = corpus_to_root_to_sentences(dream_corpus_clean_2, root_to_variations_dict)
 #root_to_sentences_waking_dict = corpus_to_root_to_sentences(waking_corpus_clean_2, root_to_variations_dict)
 
