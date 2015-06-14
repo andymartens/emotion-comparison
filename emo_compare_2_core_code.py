@@ -5,8 +5,8 @@ Created on Mon Mar 16 14:49:44 2015
 @author: charlesmartens
 """
 
-# this is the key cood for the emo app. the stuff in the emo flask app file is
-# copied from here. so think this has lastest stuff and can work from here.
+# key code for the emotion analyses/app. the stuff in the emo flask app file is
+# copied from here. so this has lastest stuff and can work from here.
 
 # next step: add the % stuff so i have the code. and run it so make sure it's
 # making graphs.
