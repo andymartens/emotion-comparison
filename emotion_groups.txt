@@ -1,0 +1,606 @@
+List of 589 emotion groups used in dream analysis.
+
+It's not a perfect list, and there is no perfect list. It could be bigger and
+more complete. It could be much more narrow.
+
+I attempted to include all the basic variations within each group. However, the list
+generally omits words that have a common meaning unrelated to emotion. For example,
+"sunny" can be used to refer to a person's emotional disposition, but it was omitted from
+this list because it's also likely to used in a way that is unrelated to emotion.
+
+In future analyses it may be worth combining very close synonyms. For example, afraid
+and scared are counted separately here but it would seem more appropriate to group
+them together.)
+
+
+Word-groups:
+
+abhors, abhorring, abhor, abhorred
+abused, abusing, abusive, abusively, abuse, abuses
+abysmally
+admired, admiration, admirers, admiring, admire, admires, admirer, admiringly
+adoration, adores, adoringly, adoring, adored, adore, adorable
+affectionate, affectionately, affections, affection
+afraid
+aggravate, aggravates, aggravatingly, aggravated, aggravation, aggravations, aggravating
+aggressively, aggressive, aggression, aggressiveness, aggressor, aggressors
+aggrieves, aggrieving, aggrieve, aggrieved
+aghast
+agitates, agitation, agitating, agitate, agitations, agitated
+agonize, agonized, agonizing, agonizingly, agonizes, agony, agonies
+alarming, alarmed, alarmingly
+alertly, alertness
+alienated, alienating, alienates, alienation, alienate
+aloof, aloofly
+amazes, amaze, amazing, amazingly, amazement, amazed
+ambivalently, ambivalent
+amuse, amused, amusing, amuses, amusingly, amusements, amusement
+anger, angers, angering, angered, angry
+angst
+anguished, anguish, anguishes, anguishing
+animosity, animosities
+annoy, annoyance, annoyances, annoyingly, annoys, annoying, annoyed
+antagonistic, antagonizes, antagonizing, antagonize, antagonized
+anticipation, anticipate, anticipated, anticipations, anticipating, anticipates
+anxieties, anxiety, anxious, anxiously
+apathetic, apathy
+apologetic, apologizes, apologizing, apology, apologized, apologize, apologies
+appallingly, appall, appalled, appalling
+appreciatively, appreciative, appreciations, appreciates, appreciate, appreciation, appreciating, appreciated
+apprehension, apprehensions, apprehensively, apprehensive
+ardent, ardently
+argued, arguing, argue, argues, arguments, argumentatively, argument, argumentative
+arousal, arousing, arouse, aroused, arouses
+arrogantly, arrogant, arrogance
+asserting, assertively, assertive, assert, asserts, asserted
+assured, assures, assure, assuring, assurances, assuredly, assurance
+astonished, astonishing, astonishingly, astonish, astonishes
+astounding, astounds, astounded, astound, astoundingly
+atrociously, atrocious, atrocity, atrocities
+attentive, attention, attentively, attentions
+attractively, attraction, attractions, attracts, attracted, attractive, attract, attracting
+aversions, aversion
+avid, avidly
+avoids, avoiding, avoid, avoidance, avoided, avoidant
+awful, awfully
+awing, awe, awed, awes, awesomely, awesome, awestruck
+awkwardly, awkward, awkwardness
+badly, bad, badness
+baffle, baffled, baffles, baffling
+bashful, bashfully
+bawls, bawling, bawled, bawl
+beautiful, beauties, beauty, beautifully
+befuddle, befuddling, befuddled, befuddles
+belittled, belittling, belittles, belittle
+belligerently, belligerent, belligerents
+beloved
+bemusing, bemuse, bemused, bemuses, bemusedly
+bereave, bereaves, bereavement, bereavements, bereaved, bereaving
+bereft
+betrayal, betrays, betraying, betray, betrayals, betrayed
+bewilders, bewildering, bewilderingly, bewildered, bewilder, bewilderment
+bleakly, bleakness, bleak
+blissful, bliss, blissfully
+boldly, bold
+boring, bore, bored, bores, boringly, boredom
+bothers, bother, bothering, bothered
+braved, braving, brave, bravely, braves, bravery
+breathlessly, breathless
+brokenhearted, brokenheartedly
+bummed, bumming, bums, bummers, bummer
+burdening, burdened, burdens, burden
+calmed, calming, calmly, calm, calms
+carefree
+cautious, cautiously
+chagrined, chagrins, chagrining, chagrin
+challenges, challenge, challenging, challenged
+charmingly, charmed, charm, charms, charming, charmers, charmer
+cheeky
+cheerless, cheerlessly
+cheers, cheered, cheerful, cheering, cheer, cheerfulness, cheerfully, cheery
+cherished, cherishing, cherishes, cherish
+chuckles, chuckling, chuckle, chuckled
+clenches, clenching, clenched, clench
+cocky
+comfort, comforted, comfortable, comforting, comfortingly, comforts, comfy
+comically, comical
+compassion, compassionate, compassionately
+competitive, compete, competed, competing, competitions, competition, competitively, competes, competitor, competitors
+complacent, complacently
+complained, complaining, complain, complains, complaints, complaint
+compulsively, compulsions, compulsion, compulsive
+conceit, conceitedly, conceited, conceits
+concentrated, concentrate, concentrates, concentrations, concentration, concentrating
+concerned, concerns, concerning, concernedly, concern
+condescendingly, condescends, condescend, condescended, condescending
+confident, confidence, confidently
+confusion, confuse, confused, confusingly, confusions, confusedly, confuses, confusing
+consideration, considerate, considerations, considerately
+consolingly, console, consoled, consoling, consolations, consoles, consolation
+consternation
+contemplatively, contemplative, contemplatives
+contemptible, contempt
+contemptuously, contemptuous
+contently, contented, content, contentedly, contenting, contentment
+contritely, contrite, contrition
+control, controlled, controls, controllers, controller, controlling
+convincing, convinces, convince, convinced, convincingly
+courage, courageous, courageously
+cowardice, cowards, cowardly, coward
+crabby
+cranky
+crazing, crazed, crazes, craze
+crazy, crazies, craziness
+creeper, creepers, creeps, creeping, creep, creepy
+cries, cry, crying, cried
+criticism, criticisms, criticize, criticizes, criticized, critic, critical, criticizing, critique, critiques
+cruel, cruelly, cruelties, cruelty
+crummy
+curiosities, curious, curiously
+cute, cutely, cutie, cuties
+cynically, cynical
+dazedly, dazes, dazing, daze, dazed
+dazzles, dazzle, dazzling, dazzlingly, dazzled
+defensively, defensive
+defiance, defiantly, defiant
+deficient, deficiency, deficiencies
+degrading, degraded, degrades, degrade, degradation
+dejection, dejects, dejected, dejecting, deject, dejectedly
+delighted, delight, delightedly, delighting, delightful, delightfully, delights
+demoralizing, demoralized, demoralizes, demoralize
+depress, depressions, depressed, depressing, depressives, depressingly, depressive, depression, depresses
+deprive, deprived, depriving, deprives
+desire, desired, desirable, desires, desiring
+desolation, desolate
+despairs, despair, despairing, despaired, despairingly
+desperately, desperate, desperation
+despicable
+despising, despise, despised, despises
+despondently, despondent
+determinedly, determined, determination
+detested, detest, detesting, detests
+devastation, devastate, devastated, devastating, devastatingly, devastates
+devilishly, devilish
+devoted, devote, devoting, devotes, devotions, devotedly, devotion
+disagreeable, disagreed, disagree, disagrees, disagreeing, disagreement, disagreements
+disappoints, disappointingly, disappointments, disappointing, disappointment, disappoint, disappointed
+disapprovingly, disapproving, disapprove, disapproval, disapproves, disapproved
+disastrously, disastrous
+disbelief, disbelieving
+discomforts, discomfort, discomforting, discomforted
+disconcertingly, disconcerts, disconcert, disconcerted, disconcerting
+discontenting, discontent, discontentedly, discontented, discontents
+discourages, discouragingly, discourage, discouraging, discouraged
+disdainfully, disdained, disdain, disdaining, disdainful, disdains
+disenchanted, disenchanting, disenchant, disenchants, disenchantment
+disgrace, disgracing, disgraced, disgracefully, disgraceful, disgraces
+disgruntle, disgruntling, disgruntled, disgruntles
+disgustedly, disgusting, disgusted, disgusts, disgust, disgustingly
+disheartens, disheartened, dishearten, disheartening, dishearteningly
+disillusioning, disillusion, disillusioned, disillusions
+disliking, dislike, disliked, dislikes
+dismal, dismally
+dismaying, dismay, dismayed, dismays
+dismissive, dismissively
+disorientate, disorientation, disorients, disorienting, disoriented
+disparaged, disparaging, disparage, disparagingly, disparages
+displeasing, displeases, displeased, displease, displeasure
+disquiet, disquieted, disquiets, disquieting
+disrespectful, disrespected, disrespect, disrespectfully, disrespects, disrespecting
+dissatisfying, dissatisfy, dissatisfies, dissatisfied
+distaste, distastes
+distractions, distracts, distracted, distract, distracting, distractedly, distraction
+distraught
+distressed, distressing, distressingly, distress, distresses
+distrust, distrusts, distrusting, distrusted
+disturb, disturbance, disturbances, disturbingly, disturbed, disturbs, disturbing
+doubting, doubtingly, doubtful, doubt, doubted, doubts, doubtfully
+downcast
+downhearted, downheartedly
+dreading, dreadful, dreads, dread, dreadfully, dreaded
+dreamy
+dreary, dreariness
+drowsy, drowsiness
+dumbfounding, dumbfounded, dumbfound, dumbfounds
+eager, eagerly, eagerness
+earnest, earnestly
+ebulliently, ebullient
+ecstasy, ecstasies, ecstatic
+egotistically, egotistical
+elated, elate, elation, elates, elatedly, elating
+embarrassing, embarrasses, embarrassments, embarrassingly, embarrassed, embarrassment, embarrass
+emotion, emotional, emotions, emotionally
+empathizing, empathized, empathizes, empathize, empathy
+enchantingly, enchanted, enchants, enchant, enchanting
+encourages, encouraging, encouragement, encourage, encouragements, encouragingly, encouraged
+energetic, energy, energized, energizing, energizes, energize
+engross, engrosses, engrossing, engrossed
+enjoy, enjoyment, enjoyable, enjoys, enjoyments, enjoying, enjoyed
+ennui
+enrage, enraged, enrages, enraging
+entertainments, entertainers, entertainment, entertained, entertain, entertains, entertainer, entertaining, entertainingly
+enthusiasm, enthusiasms, enthusiast, enthusiastic, enthusiasts
+envies, envy, envying, envyingly, envied, enviously, envious
+erotic
+euphoria, euphoric
+evilly, evils, evil
+exaltation, exalt, exalted
+exasperating, exasperate, exasperated, exasperation, exasperatedly, exasperatingly, exasperates
+excellently, excellent
+excitement, excitedly, excitingly, excites, excite, excitable, excitements, exciting, excited
+exhausted, exhausting, exhaustion
+exhilarating, exhilaration, exhilarate, exhilarated, exhilarates
+expectantly, expectant
+exuberantly, exuberant
+exultation, exulting, exulted
+fantastic
+fascinate, fascinating, fascination, fascinated, fascinatingly, fascinations, fascinates
+fatigues, fatigue, fatigued, fatiguing
+fearing, fearful, fears, fearfully, fear, feared, fearsome
+feverishly, feverish
+flabbergasted, flabbergasts, flabbergast, flabbergasting
+flirtations, flirtation, flirtatious, flirt, flirts, flirting, flirted, flirty
+fluster, flustering, flustered, flusters
+fond, fondly, fondness
+foolhardy
+foolishly, foolish, foolishness
+forgave, forgiven, forgiving, forgiveness, forgive, forgives
+forlorn, forlornly
+frantic
+frenzy, frenziedly, frenzies, frenzied
+fretful, frets, fretfully, fretting, fretted, fret
+friendliness, friendly, friendlies
+frighteningly, fright, frightfully, frightful, frighting, frights, frightening, frighten, frightens, frightened
+frowning, frowned, frown, frowns
+frustrations, frustrated, frustrates, frustratingly, frustration, frustrate, frustrating
+fulfilled, fulfill, fulfilling, fulfillment
+fume, fuming, fumed, fumes
+fun, funny, funnies, funniness
+furious, furiously
+fury, furies, furiously
+gaiety
+generosity, generosities, generous, generously
+genially, genial
+gentle, gentling, gentled, gentles
+giggly, giggle, giggling, giggled
+gladly, glad, gladness
+glee, gleeful, gleefully
+gloom, gloomy
+glories, glorying, glory, gloried, gloriously, glorious
+glum, glumly
+good, goodly, goodness
+gratefully, grateful
+gratification, gratifications, gratified, gratify, gratifying, gratifyingly, gratifies
+gratitude
+grief, griefs, grieves, grieving, grieve, grieved
+grimly, grim
+grinning, grins, grinned, grin
+grouch, grouched, grouching, grouches, grouchy
+grumpy, grump
+guilt, guilty
+happiness, happy, happiest, happier, happily
+harasses, harass, harassing, harassment, harassed
+harmonies, harmony
+harshness, harsh
+hated, hatefully, hateful, hating, hate, hates, hatred
+heartbreaks, heartbreaking, heartbreak, heartbroken
+heartening, hearten, heartened, heartens
+helpless, helplessness, helplessly
+hesitates, hesitation, hesitant, hesitantly, hesitating, hesitate, hesitations, hesitatingly, hesitated
+homesick
+hopelessly, hopelessness, hopeless
+hoping, hopeful, hoped, hopefully, hopes, hopefuls, hope
+horrendously, horrendous
+horrible
+horridly, horrid
+horrific, horrify, horrifyingly, horrifies, horrifying, horrified, horror
+hostility, hostilities, hostile, hostilely, hostiles
+hotheaded, hotheads, hothead, hotheadedly
+humbling, humbles, humble, humbled
+humiliate, humiliation, humiliated, humiliating, humiliations, humiliates, humiliatingly
+humility
+humorous, humor, humors, humorously
+hurtfully, hurting, hurtful, hurts, hurt
+hyper, hyperactive
+hysteria, hysterical, hysterically
+idolizing, idolizes, idolized, idolize
+ignore, ignored, ignores, ignoring
+impatient, impatiently, impatience, impatiences
+impotently, impotent, impotence
+impressed, impressive, impress, impressing, impresses, impressively
+inadequate, inadequately
+incenses, incensing, incense, incensed
+incredible
+incredulity, incredulous, incredulously
+indecisive, indecisively, indecision
+indifferently, indifferent, indifference
+indignantly, indignity, indignation, indignities, indignant
+ineffectively, ineffective, ineffectually, ineffectual
+infatuations, infatuate, infatuates, infatuation, infatuating, infatuated
+inferiors, inferiority, inferior
+infuriates, infuriate, infuriating, infuriatingly, infuriated
+inhibiting, inhibit, inhibited, inhibits
+inquisitive, inquisitively
+insane, insanely, insanity
+insatiable
+insecurity, insecure, insecurities, insecurely
+insolently, insolent
+inspiring, inspirations, inspire, inspired, inspirational, inspires, inspiration
+insultingly, insults, insulting, insulted, insult
+intensive, intensives, intense, intensely, intensively
+intents, intent, intently
+interests, interesting, interestingly, interested, interest
+intimacies, intimacy, intimate
+intimated, intimately, intimating, intimates, intimate
+intimidating, intimidate, intimidated, intimidation, intimidatingly, intimidates
+intolerant, intolerance, intolerantly, intolerable
+intriguing, intriguingly, intrigued, intrigue, intrigues
+invulnerable, invulnerability
+irately, irate
+irk, irking, irked, irks
+irritates, irritation, irritatingly, irritations, irritate, irritable, irritating, irritated
+jealous, jealously, jealousies, jealousy
+joyfully, joy, joyed, joys, joyful, joyously, joyous
+jubilantly, jubilation, jubilant
+judge, judges, judged, judging, judgmental, judgmentally, judgment, judgments
+jumpy
+kindly, kindness
+laughingly, laughs, laughing, laugh, laughed, laughter
+lazies, lazy, laziness, lazying, lazied
+letdown, letdowns
+lightheaded, lightheadedly
+lightheartedly, lighthearted
+likable, liked, liking, likes
+listless, listlessly
+lively, livened, liven, livening, livens
+lividly, livid
+loathed, loathes, loathing, loathe, loathsomely, loathsome
+loneliness, lonely, lonesome, lonesomely
+longs, longing, longingly, longed
+lousy
+lovable, loved, love, loves, lovingly, lovely, loving
+lovesick
+lowlifes, lowlife
+lowly
+loyal, loyally, loyalty
+lucky, luck
+lustfully, lusted, lusts, lust, lusting, lustful, lusty
+maddened, maddeningly, maddening, madden, maddens, mads, mad
+malice, malicious, maliciously, maliciousness
+meanie, meanies, meanly, meanness
+meaningful, meaningfully
+melancholy
+mellows, mellow, mellowing, mellowed, mellowly
+merriment, merry, merily
+mesmerizes, mesmerize, mesmerizing, mesmerized
+mischief, mischievous, mischievously
+miserable, miseries, misery
+misgivings, misgiving
+mistrusted, mistrusting, mistrust, mistrusts
+misunderstands, misunderstanding, misunderstand, misunderstood
+modestly, modest, modesty
+moody
+mope, moping, moped, mopes
+mortifying, mortified, mortifies, mortify
+mourned, mourns, mourning, mourn, mournful, mournfully
+nausea, nauseate, nauseatingly, nauseates, nauseating, nauseated, nauseous, nauseously
+needy, neediness
+negatively, negative, negativity, negatives
+neglecting, neglected, neglect, neglects
+nervousness, nervous, nervously
+neutrally, neutral, neutrals
+nicely, nice
+nonchalant, nonchalantly
+nostalgia, nostalgic
+nosy
+numbs, numbing, numbed, numb, numbly
+obsessed, obsessions, obsessive, obsessively, obsesses, obsessives, obsessing, obsession, obsess
+obstinately, obstinate
+offend, offended, offending, offends, offensive
+oppressive, oppression, oppressed, oppressively, oppresses, oppressing, oppress, oppressor, oppressors
+optimisms, optimism, optimists, optimistic, optimist
+outrage, outraged, outraging, outrages
+overconfident
+overjoy, overjoying, overjoyed, overjoys
+overwhelm, overwhelms, overwhelming, overwhelmingly, overwhelmed
+pain, painfully, pained, pains, painful
+panic, panics, panicking, panicked, panicky
+paranoia, paranoid, paranoids
+passionately, passions, passionate, passion
+passive, passively, passives
+patience, patiently
+peacefully, peace, peaces, peaceful
+peachy
+peculiarly, peculiar
+peeve, peeves, peeved, peeving
+pensive, pensively
+perfect, perfecting, perfections, perfects, perfection, perfectly, perfected
+perplexing, perplexes, perplexedly, perplexed, perplex
+persecutions, persecutes, persecute, persecuting, persecution, persecuted
+perturbed, perturbs, perturbing, perturb
+pessimism, pessimistic, pessimists, pessimist
+petrified, petrify, petrifies, petrifying
+petty, pettiness
+petulant, petulantly, petulance
+phonies, phonied, phony
+pines, pining, pine, pined
+pique, piquing, piqued, piques
+pity, pitifully, pitying, pitied, pityingly, pitiful, pities
+placid, placidly
+playful, playfully
+pleasant, pleasantly
+pleasingly, pleases, pleasing, pleased
+pleasure, pleasures, pleasuring, pleasured, pleasurable
+pout, pouted, pouts, pouting
+powerlessly, powerless
+preoccupying, preoccupies, preoccupied, preoccupy
+pressure, pressuring, pressured, pressures
+prided, priding, pride, prides, proud, proudly
+punchy
+purposeful, purposefully
+puzzling, puzzled, puzzlement
+raged, raging, ragingly, rages, rage
+reassured, reassurances, reassure, reassuring, reassurance, reassures, reassuringly
+rebelliously, rebellious
+reflective, reflectively
+regrettable, regret, regretful, regretting, regretfully, regretted, regrets
+rejoices, rejoice, rejoiced, rejoicing
+relaxing, relax, relaxed, relaxations, relaxation, relaxes
+relief, reliefs, relieved, relieve, relieving, relieves
+reluctantly, reluctance, reluctant
+remorse, remorsefully, remorseful
+reproachfully, reproachful, reproach
+repugnance, repugnant, repugnantly
+repulse, repulsion, repulsing, repulsed, repulses
+resentful, resentfully, resenting, resentment, resents, resented, resentments, resent
+resigning, resigned, resignedly, resign, resigns
+respects, respecting, respected, respectable, respect, respectability
+restlessly, restless, restlessness
+reverencing, reverenced, reverent, reverences, reverently, reverence
+revulsion, revolted, revolting, revolts, revolt
+ridiculously, ridiculous
+romantic, romantically, romance, romancing
+rottenly, rotten
+saddens, saddening, saddened, sadden, sadness, sadly, sad
+sanguinely, sanguine
+sarcasm, sarcasms, sarcastic
+sassy
+satisfaction, satisfactions, satisfy, satisfyingly, satisfies, satisfying, satisfied
+scared, scare, scaring, scares, scary
+scolded, scold, scolds, scolding
+scorns, scornfully, scorning, scorned, scornful, scorn
+seduced, seduce, seducers, seducing, seducer, seduces, seduction, seductively, seductive, seductions
+seethes, seething, seethe, seethed
+sensational, sensation, sensations, sensationally
+sensitive, sensitivity, sensitivities, sensitively, sensitives
+sensuality, sensual, sensually, sensuous, sensuously
+sentimentally, sentimentality, sentimental
+serenely, serene, serenity
+seriousness, serious, seriously
+sexed, sex, sexuality, sexual, sexually, sexy
+shamefully, shames, shame, shaming, shameful, shamed, ashamedly, ashamed
+sheepish, sheepishly
+shocking, shock, shockingly, shocked, shocks, shocker, shockers
+shyly, shy, shyness
+sicks, sickness, sickly, sick, sicking, sicked, sickening, sicken, sickens, sickened, sickeningly
+silly, silliness, sillies
+sincerely, sincere, sincerity
+skeptical, skepticism, skeptically
+sleepy, sleepiness
+slights, slightly, slighting, slighted, slight
+sluggishly, sluggish
+sly, slyly
+smile, smiling, smilingly, smiled, smiles, smiley, smileys
+smirked, smirk, smirking, smirks
+smug, smugly, smugness
+sneaking, sneaks, sneak, sneakingly, sneaky
+solemn, solemnly, solemnities, solemnity
+somber, somberly
+soothe, soothed, soothingly, soothes, soothing
+sorrow, sorrowfully, sorrowed, sorrows, sorrowing, sorrowful
+sorry
+spite, spiting, spited, spiteful, spitefully, spites
+squeamish, squeamishly
+startling, startle, startled, startles, startlingly
+sternly, sterns, stern
+stimulation, stimulated, stimulate, stimulating, stimulates
+straining, strain, strained, strains
+strangely, strange
+stresses, stress, stressful, stressing, stressed
+strongly, strong
+stubbornness, stubborn, stubbornly
+stuns, stunning, stun, stunningly, stunned, stunner, stunners
+stupidly, stupidity, stupid, stupidities, stupids
+subduing, subdued, subdues, subdue
+succeed, succeeding, succeeded, succeeds
+successful, successfully, success
+suffered, suffer, suffering, suffers
+sulking, sulks, sulked, sulk, sulky
+sullenly, sullen
+superb, superbly
+superior, superiority, superiors
+surprisingly, surprise, surprising, surprised, surprises
+suspense, suspenseful
+suspicion, suspicions, suspiciously, suspicious
+sympathetic, sympathizes, sympathizing, sympathize, sympathized, sympathy, sympathies
+tearfully, tearful
+teasingly, teasingteases, teased, tease, teasing
+tenderness, tendering, tenders, tendered, tenderly, tender
+tensing, tensed, tensely, tense, tenses, tension, tensions
+terrible
+terrific, terrifically
+terrifies, terrifyingly, terrifying, terrify, terrified, terrorize, terrorizing, terrorized, terrors, terror, terrorizes
+thankful, thankfully
+thinking, think, thinks, thought, thoughtfully, thoughtful
+threaten, threatens, threateningly, threatened, threatening, threats, threat
+thrilled, thrillingly, thrilling, thrill, thrills
+thwarts, thwart, thwarted, thwarting
+timidly, timid
+tingly
+tiredly, tires, tiring, tire, tired, tiresome, tiresomely
+tolerated, tolerances, tolerate, tolerant, tolerates, tolerantly, tolerating, tolerance
+tormented, torments, tormentingly, torment, tormenting
+touchy
+tremulously, tremulous
+triumphantly, triumphant, triumphs, triumphing, triumph, triumphed
+troubling, trouble, troubled, troubles, troublesomely, troublesome
+trusting, trust, trustingly, trusted, trusts, trustworthy, trusty, trusties
+turmoil, turmoils
+ugliness, ugly
+unattractively, unattractive
+uncaring
+uncertainly, uncertain, uncertainties, uncertainty
+uncomfortable
+unconcernedly, unconcern, unconcerned
+uncooperative
+undecided
+understandingly, understands, understand, understanding
+uneasy
+unfriendly
+unfulfilled, unfulfilling
+unhappy, unhappiness, unhappily
+uninterested, uninteresting
+unlovable, unloved, unloving
+unnervingly, unnerves, unnerve, unnerved, unnerving
+unpleasantly, unpleasantness, unpleasant
+unprotected
+unsatisfied, unsatisfying
+unsettled, unsettle, unsettles, unsettling
+unsure
+untroubled
+untrustworthy
+unwanted, unwantedness
+unwelcome, unwelcoming
+unworried
+unworthy, unworthiness
+upsetting, upset, upsets
+uptight
+useless, uselessly
+vain, vainly, vanities, vanity
+vengeance, vengeful, vengefully
+vicious, viciously, viciousness
+vigor, vigorously, vigorous
+violence, violently, violent
+virtue, virtues, virtuous, virtuously
+vulnerabilities, vulnerability, vulnerable
+wants, wanting, wanted, want
+warmhearted
+wary, wariness
+weakens, weakening, weakened, weaken, weakling, weakness, weakly, weak
+wearied, wearies, wearying, weary
+weeps, weep, weeping, weepy, weepies, wept
+weird, weirdly, weirdness
+welcomed, welcome, welcoming, welcomes
+well, welled, wells, welling
+willfully, willful
+wistful, wistfully
+witty, wittiness
+woeful, woefully
+wonderful, wonderfully, wondrously, wondrous
+worryingly, worriedly, worried, worries, worrying, worry
+worship, worships, worshipping
+worthies, worthy, worthiness, worthwhile
+worthless, worthlessly, worthlessness
+wrath
+yearns, yearning, yearn, yearned
+yuck, yucky
