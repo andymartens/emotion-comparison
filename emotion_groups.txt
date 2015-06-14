@@ -1,6 +1,7 @@
 List of 589 emotion groups used in dream analysis.
 
-It's not a perfect list, and there is no perfect list. It could be bigger and
+The list is based on emotion research (Clore, Ortony, & Foss, 1987; Storm & Storm,
+1987). It's not a perfect list, and there is no perfect list. It could be bigger and
 more complete. It could be much more narrow.
 
 I attempted to include all the basic variations within each group. However, the list
